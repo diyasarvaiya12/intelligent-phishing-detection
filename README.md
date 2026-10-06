@@ -196,22 +196,29 @@ Using the configured Python 3.12 environment:
 
 ## Running the Project
 
-### Step 1: Train the Model (Optional if `model.pkl` already exists)
-```powershell
-cd backend
-python train_model.py
-```
+### One-Command Quick Launch (Recommended)
+You can run both the backend API and frontend dashboard together with a single command:
 
-### Step 2: Start the Web Application
 ```powershell
+python run.py
+```
+*(Or simply double-click **`start.bat`** in Windows File Explorer)*
+
+This automatically:
+1. Detects and uses the configured Python environment.
+2. Checks that `model.pkl` is loaded (or trains it if missing).
+3. Serves the Flask backend API and modern frontend dashboard.
+4. Automatically opens **http://127.0.0.1:5000** in your default web browser!
+
+---
+
+### Manual Launch (Alternative)
+```powershell
+.\venv312\Scripts\Activate.ps1
+cd backend
 python app.py
 ```
-
-### Step 3: Access Dashboard
-Open your web browser and navigate to:
-```text
-http://127.0.0.1:5000
-```
+Then visit **http://127.0.0.1:5000** in your browser.
 
 ---
 
