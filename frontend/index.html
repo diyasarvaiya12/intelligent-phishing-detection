@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard | Intelligent Phishing Detection System</title>
+    <meta name="description" content="College CNS Design Challenge - Intelligent Phishing Detection and Prevention System Using Machine Learning">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background glow elements -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">PhishGuard</span>
+                    <span class="brand-tag">CNS Project</span>
+                </div>
+            </div>
+
+            <div class="nav-status">
+                <div class="status-indicator active" id="engineStatusIndicator"></div>
+                <span class="status-text" id="engineStatusText">ML Engine Active (Random Forest)</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="badge-pill">
+                <span class="badge-dot"></span>
+                <span>Applied Cryptography & Network Security Design Challenge</span>
+            </div>
+            <h1 class="hero-title">Intelligent Phishing Detection System</h1>
+            <p class="hero-subtitle">
+                Analyze suspicious URLs in real time using machine learning lexical feature extraction before you trust them.
+            </p>
+        </section>
+
+        <!-- Scanner Card -->
+        <section class="scanner-card">
+            <form id="scannerForm" class="scanner-form" onsubmit="event.preventDefault(); scanUrl();">
+                <div class="input-wrapper">
+                    <div class="input-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="urlInput" 
+                        class="url-input" 
+                        placeholder="Enter URL to inspect (e.g., https://example.com/login or secure-verify.account.com)..." 
+                        autocomplete="off"
+                        spellcheck="false"
+                        required
+                    />
+                    <button type="submit" id="scanBtn" class="scan-button">
+                        <span class="btn-text">CHECK URL</span>
+                        <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Sample test quick links for easy viva demo -->
+            <div class="sample-links">
+                <span class="sample-label">Quick Demo URLs:</span>
+                <button type="button" class="sample-btn" onclick="setSample('https://www.southbankmosaics.com')">Legitimate Sample</button>
+                <button type="button" class="sample-btn" onclick="setSample('https://www.uni-mainz.de')">Academic Site</button>
+                <button type="button" class="sample-btn warning-sample" onclick="setSample('http://secure-login.paypal.account-verify.com/login?id=999&auth=fail')">Phishing Sample</button>
+            </div>
+
+            <!-- Error message container -->
+            <div id="errorMessage" class="error-banner hidden">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="errorText">Unable to analyze URL.</span>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loadingState" class="loading-container hidden">
+            <div class="radar-spinner">
+                <div class="radar-circle"></div>
+                <div class="radar-sweep"></div>
+            </div>
+            <h3 class="loading-title">Analyzing URL Security Profile...</h3>
+            <p class="loading-sub">Extracting 17 lexical features and computing Random Forest risk probability</p>
+        </section>
+
+        <!-- Result Card (Shown after scan) -->
+        <section id="resultSection" class="result-section hidden">
+            <div class="result-card" id="resultCard">
+                <!-- Verdict Header -->
+                <div class="result-header">
+                    <div class="verdict-icon-wrap" id="verdictIconWrap">
+                        <!-- Icon dynamically injected -->
+                    </div>
+                    <div class="verdict-text-wrap">
+                        <div class="verdict-tag" id="verdictTag">VERDICT</div>
+                        <h2 class="verdict-title" id="verdictTitle">URL LOOKS LEGITIMATE</h2>
+                        <p class="verdict-explanation" id="verdictExplanation">Lexical patterns conform to standard domain conventions.</p>
+                        <div class="scanned-url-display">
+                            <span class="mono-label">Target:</span>
+                            <span class="mono-url" id="scannedUrlText">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scores Grid -->
+                <div class="scores-grid">
+                    <!-- Risk Score Gauge -->
+                    <div class="score-card">
+                        <div class="score-header">
+                            <span class="score-label">Risk Score</span>
+                            <span class="score-badge" id="riskBadge">LOW RISK</span>
+                        </div>
+                        <div class="gauge-wrap">
+                            <div class="risk-bar-bg">
+                                <div class="risk-bar-fill" id="riskBarFill" style="width: 0%"></div>
+                            </div>
+                            <div class="score-val" id="riskScoreVal">0%</div>
+                        </div>
+                        <p class="score-hint">Calculated probability of phishing deception</p>
+                    </div>
+
+                    <!-- Confidence -->
+                    <div class="score-card">
+                        <div class="score-header">
+                            <span class="score-label">Model Confidence</span>
+                            <span class="score-badge neutral">PROBABILISTIC</span>
+                        </div>
+                        <div class="gauge-wrap">
+                            <div class="score-val accent" id="confidenceVal">0%</div>
+                        </div>
+                        <p class="score-hint">Decision certainty from Random Forest ensemble</p>
+                    </div>
+
+                    <!-- Model Classification -->
+                    <div class="score-card">
+                        <div class="score-header">
+                            <span class="score-label">Classification</span>
+                            <span class="score-badge neutral">CLASS LABEL</span>
+                        </div>
+                        <div class="gauge-wrap">
+                            <div class="score-val" id="classificationVal">-</div>
+                        </div>
+                        <p class="score-hint" id="labelMappingHint">Mapped from UCI PhiUSIIL dataset</p>
+                    </div>
+                </div>
+
+                <!-- Feature Analysis Section -->
+                <div class="analysis-section">
+                    <div class="section-header-compact">
+                        <h3 class="section-title">Extracted Lexical Features (17 Features)</h3>
+                        <span class="feature-count-badge">17 Model Inputs</span>
+                    </div>
+
+                    <div class="features-grid" id="featuresGrid">
+                        <!-- Feature pills dynamically generated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Performance Metrics Section -->
+        <section class="metrics-section">
+            <div class="section-title-wrap">
+                <div class="section-sub">Empirical Evaluation on PhiUSIIL Dataset</div>
+                <h2 class="section-heading">Model Performance Metrics</h2>
+                <p class="section-desc">
+                    Trained on lexical URL features with stratified 80-20 train-test split.
+                </p>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Accuracy</div>
+                    <div class="metric-value" id="metricAccuracy">--%</div>
+                    <div class="metric-sub">Overall correct classifications</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Precision</div>
+                    <div class="metric-value" id="metricPrecision">--%</div>
+                    <div class="metric-sub">True positive exactness</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Recall</div>
+                    <div class="metric-value" id="metricRecall">--%</div>
+                    <div class="metric-sub">Detection sensitivity</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">F1 Score</div>
+                    <div class="metric-value" id="metricF1">--%</div>
+                    <div class="metric-sub">Harmonic balance of precision & recall</div>
+                </div>
+            </div>
+
+            <!-- Confusion Matrix Display -->
+            <div class="confusion-box" id="confusionBox">
+                <div class="cm-header">
+                    <span class="cm-title">Confusion Matrix</span>
+                    <span class="cm-engine" id="cmEngine">Evaluating...</span>
+                </div>
+                <div class="cm-table-wrap">
+                    <table class="cm-table">
+                        <thead>
+                            <tr>
+                                <th>Actual \ Predicted</th>
+                                <th>Predicted Phishing (0)</th>
+                                <th>Predicted Legitimate (1)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Actual Phishing (0)</strong></td>
+                                <td id="cmTN" class="cm-cell hit">-</td>
+                                <td id="cmFP" class="cm-cell miss">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actual Legitimate (1)</strong></td>
+                                <td id="cmFN" class="cm-cell miss">-</td>
+                                <td id="cmTP" class="cm-cell hit">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Pipeline / How It Works -->
+        <section class="how-it-works-section">
+            <div class="section-title-wrap">
+                <div class="section-sub">System Architecture</div>
+                <h2 class="section-heading">How PhishGuard Detects Phishing</h2>
+            </div>
+
+            <div class="pipeline-grid">
+                <div class="pipeline-step">
+                    <div class="step-num">01</div>
+                    <h4 class="step-title">URL Input</h4>
+                    <p class="step-desc">User submits suspicious target URL via web dashboard or API client.</p>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">02</div>
+                    <h4 class="step-title">Feature Extraction</h4>
+                    <p class="step-desc">Parses 17 lexical security attributes (length, subdomains, obfuscation, HTTPS).</p>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">03</div>
+                    <h4 class="step-title">ML Model</h4>
+                    <p class="step-desc">Features pass through Random Forest ensemble decision trees trained on PhiUSIIL.</p>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">04</div>
+                    <h4 class="step-title">Risk Analysis</h4>
+                    <p class="step-desc">Generates probabilistic risk score and Legitimate vs Potential Phishing verdict.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <strong>Intelligent Phishing Detection and Prevention System</strong>
+                <p>College CNS / Applied Cryptography and Network Security Project</p>
+            </div>
+            <div class="footer-right">
+                <span>Educational Demonstration • Probabilistic ML Assessment</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

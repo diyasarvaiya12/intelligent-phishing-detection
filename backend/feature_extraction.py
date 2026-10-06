@@ -57,13 +57,14 @@ def extract_features(url):
     else:
         features["NoOfSubDomain"] = 0
 
-    # 5. Check for URL obfuscation
+    # 5. Check for URL obfuscation (@, %, and // occurring after protocol scheme)
+    url_body = url.split("://", 1)[1] if "://" in url else url
     obfuscation_chars = ["@", "%", "//"]
 
     obfuscated_count = 0
 
     for char in obfuscation_chars:
-        obfuscated_count += url.count(char)
+        obfuscated_count += url_body.count(char)
 
     features["HasObfuscation"] = int(obfuscated_count > 0)
 

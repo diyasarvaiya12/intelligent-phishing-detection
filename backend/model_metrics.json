@@ -1,0 +1,40 @@
+{
+    "engine": "Pure-Python Random Forest (Smart App Control Safe)",
+    "accuracy": 0.9933,
+    "precision": 0.9902,
+    "recall": 0.9986,
+    "f1_score": 0.9944,
+    "confusion_matrix": [
+        [
+            976,
+            14
+        ],
+        [
+            2,
+            1408
+        ]
+    ],
+    "feature_columns": [
+        "URLLength",
+        "DomainLength",
+        "IsDomainIP",
+        "NoOfSubDomain",
+        "HasObfuscation",
+        "NoOfObfuscatedChar",
+        "ObfuscationRatio",
+        "NoOfLettersInURL",
+        "LetterRatioInURL",
+        "NoOfDegitsInURL",
+        "DegitRatioInURL",
+        "NoOfEqualsInURL",
+        "NoOfQMarkInURL",
+        "NoOfAmpersandInURL",
+        "NoOfOtherSpecialCharsInURL",
+        "SpacialCharRatioInURL",
+        "IsHTTPS"
+    ],
+    "label_meanings": {
+        "0": "Phishing",
+        "1": "Legitimate"
+    }
+}
