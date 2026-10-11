@@ -12,6 +12,9 @@ This project implements a web-based **Intelligent Phishing Detection System** us
 
 ---
 
+# Project Presentation
+*[View the PhishGuard Project Presentation (Canva Slides)]((https://canva.link/gd5b6efrjt32ovu))
+
 ## Problem Statement
 
 - Phishing attacks deceive users into submitting sensitive credentials or downloading malicious payloads.
