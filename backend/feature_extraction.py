@@ -3,7 +3,7 @@ import re
 import ipaddress
 
 
-# Features that will be used by our ML model
+# Features that will be used by our ML model (exact match with dataset schema)
 FEATURE_COLUMNS = [
     "URLLength",
     "DomainLength",
@@ -25,22 +25,33 @@ FEATURE_COLUMNS = [
 ]
 
 
-def extract_features(url):
+def extract_features(url: str) -> dict:
+    """
+    Extracts 17 lexical URL features matching the exact preprocessing schema
+    of the UCI PhiUSIIL Phishing URL Dataset benchmark.
+    """
+    url = str(url).strip()
+    if not (url.startswith("http://") or url.startswith("https://")):
+        url = f"https://{url}"
 
     parsed = urlparse(url)
-
     domain = parsed.netloc
-
-    # Remove port number if present
     domain_without_port = domain.split(":")[0]
+
+    # Benchmark dataset indexes URLs with length - 1 (chopped end-char convention)
+    chopped = url[:-1] if len(url) > 1 else url
+    url_len = len(chopped)
+
+    # Clean URL without scheme and www prefix used for token/character counts in PhiUSIIL
+    clean = re.sub(r"^https?://(www\.)?", "", chopped)
 
     features = {}
 
     # 1. URL Length
-    features["URLLength"] = len(url)
+    features["URLLength"] = url_len
 
     # 2. Domain Length
-    features["DomainLength"] = len(domain_without_port)
+    features["DomainLength"] = len(domain)
 
     # 3. Check whether domain is an IP address
     try:
@@ -49,110 +60,63 @@ def extract_features(url):
     except ValueError:
         features["IsDomainIP"] = 0
 
-    # 4. Number of subdomains
+    # 4. Number of subdomains beyond base domain
     domain_parts = domain_without_port.split(".")
-
     if len(domain_parts) > 2:
         features["NoOfSubDomain"] = len(domain_parts) - 2
     else:
         features["NoOfSubDomain"] = 0
 
-    # 5. Check for URL obfuscation (@, %, and // occurring after protocol scheme)
-    url_body = url.split("://", 1)[1] if "://" in url else url
-    obfuscation_chars = ["@", "%", "//"]
+    # 5, 6, 7. Obfuscation indicators (@, %, and // occurring after protocol scheme)
+    url_body = chopped.split("://", 1)[1] if "://" in chopped else chopped
+    obf_count = 0
+    hex_matches = re.findall(r"%[0-9a-fA-F]{2}", url_body)
+    obf_count += len(hex_matches) * 3
+    remaining_body = re.sub(r"%[0-9a-fA-F]{2}", "", url_body)
+    obf_count += remaining_body.count("%")
+    obf_count += remaining_body.count("@")
+    obf_count += remaining_body.count("//") * 2
 
-    obfuscated_count = 0
+    features["HasObfuscation"] = int(obf_count > 0)
+    features["NoOfObfuscatedChar"] = obf_count
+    features["ObfuscationRatio"] = round(obf_count / url_len, 3) if url_len > 0 else 0.0
 
-    for char in obfuscation_chars:
-        obfuscated_count += url_body.count(char)
-
-    features["HasObfuscation"] = int(obfuscated_count > 0)
-
-    # 6. Number of obfuscated characters
-    features["NoOfObfuscatedChar"] = obfuscated_count
-
-    # 7. Obfuscation ratio
-    if len(url) > 0:
-        features["ObfuscationRatio"] = (
-            obfuscated_count / len(url)
-        )
-    else:
-        features["ObfuscationRatio"] = 0
-
-    # 8. Number of letters
-    letters = sum(char.isalpha() for char in url)
-
+    # 8, 9. Alphabetic letters count and ratio
+    letters = sum(c.isalpha() for c in clean)
     features["NoOfLettersInURL"] = letters
+    features["LetterRatioInURL"] = round(letters / url_len, 3) if url_len > 0 else 0.0
 
-    # 9. Letter ratio
-    if len(url) > 0:
-        features["LetterRatioInURL"] = (
-            letters / len(url)
-        )
-    else:
-        features["LetterRatioInURL"] = 0
-
-    # 10. Number of digits
-    digits = sum(char.isdigit() for char in url)
-
+    # 10, 11. Digits count and ratio
+    digits = sum(c.isdigit() for c in clean)
     features["NoOfDegitsInURL"] = digits
+    features["DegitRatioInURL"] = round(digits / url_len, 3) if url_len > 0 else 0.0
 
-    # 11. Digit ratio
-    if len(url) > 0:
-        features["DegitRatioInURL"] = (
-            digits / len(url)
-        )
-    else:
-        features["DegitRatioInURL"] = 0
+    # 12, 13, 14. Query delimiter counts
+    features["NoOfEqualsInURL"] = clean.count("=")
+    features["NoOfQMarkInURL"] = clean.count("?")
+    features["NoOfAmpersandInURL"] = clean.count("&")
 
-    # 12. Number of '='
-    features["NoOfEqualsInURL"] = url.count("=")
+    # 15, 16. Other special characters (excluding =, ?, &) and ratio
+    other_specials = re.findall(r"[^a-zA-Z0-9=?&]", clean)
+    features["NoOfOtherSpecialCharsInURL"] = len(other_specials)
+    features["SpacialCharRatioInURL"] = round(len(other_specials) / url_len, 3) if url_len > 0 else 0.0
 
-    # 13. Number of '?'
-    features["NoOfQMarkInURL"] = url.count("?")
-
-    # 14. Number of '&'
-    features["NoOfAmpersandInURL"] = url.count("&")
-
-    # 15. Number of other special characters
-    special_chars = re.findall(
-        r"[^a-zA-Z0-9]",
-        url
-    )
-
-    excluded_chars = ["=", "?", "&"]
-
-    other_special_chars = [
-        char for char in special_chars
-        if char not in excluded_chars
-    ]
-
-    features["NoOfOtherSpecialCharsInURL"] = len(
-        other_special_chars
-    )
-
-    # 16. Special character ratio
-    if len(url) > 0:
-        features["SpacialCharRatioInURL"] = (
-            len(special_chars) / len(url)
-        )
-    else:
-        features["SpacialCharRatioInURL"] = 0
-
-    # 17. HTTPS
-    features["IsHTTPS"] = int(
-        parsed.scheme.lower() == "https"
-    )
+    # 17. HTTPS flag
+    features["IsHTTPS"] = int(parsed.scheme.lower() == "https")
 
     return features
 
+
 if __name__ == "__main__":
+    test_urls = [
+        "https://www.google.com",
+        "https://www.uni-mainz.de",
+        "https://github.com",
+        "http://secure-login.paypal.account-verify.com/login?id=999&auth=fail"
+    ]
 
-    test_url = "https://secure-login.example.com/account?verify=123"
-
-    features = extract_features(test_url)
-
-    print("\nExtracted Features:\n")
-
-    for name, value in features.items():
-        print(f"{name}: {value}")
+    for u in test_urls:
+        feats = extract_features(u)
+        print(f"\n--- Features for {u} ---")
+        for k, v in feats.items():
+            print(f"  {k}: {v}")

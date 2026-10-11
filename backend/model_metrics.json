@@ -1,17 +1,17 @@
 {
-    "engine": "Pure-Python Random Forest (Smart App Control Safe)",
-    "accuracy": 0.9933,
-    "precision": 0.9902,
-    "recall": 0.9986,
-    "f1_score": 0.9944,
+    "engine": "scikit-learn RandomForestClassifier",
+    "accuracy": 0.9973,
+    "precision": 0.996,
+    "recall": 0.9992,
+    "f1_score": 0.9976,
     "confusion_matrix": [
         [
-            976,
-            14
+            20082,
+            107
         ],
         [
-            2,
-            1408
+            21,
+            26949
         ]
     ],
     "feature_columns": [

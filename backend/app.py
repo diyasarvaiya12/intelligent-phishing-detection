@@ -45,11 +45,27 @@ if os.path.exists(METRICS_PATH):
 
 
 def normalize_url(url: str) -> str:
-    """Normalize input URL to include scheme if omitted."""
+    """Normalize input URL to standard canonical form matching dataset conventions."""
     url = url.strip()
     if not (url.startswith("http://") or url.startswith("https://")):
-        return f"https://{url}"
+        url = f"https://{url}"
+
+    from urllib.parse import urlparse
+    import ipaddress
+    parsed = urlparse(url)
+    host = parsed.netloc.split(":")[0]
+
+    host_parts = host.split(".")
+    # If apex domain (e.g. google.com instead of www.google.com), add www. prefix to align with benchmark schema
+    if len(host_parts) == 2:
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            new_netloc = f"www.{parsed.netloc}"
+            url = url.replace(f"://{parsed.netloc}", f"://{new_netloc}", 1)
+
     return url
+
 
 
 @app.route("/")

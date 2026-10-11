@@ -1,53 +1,77 @@
-import urllib.request
 import json
+import sys
+import os
 
-base = "http://127.0.0.1:5000"
+# Ensure backend directory is in path
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, CURRENT_DIR)
 
-print("--- Testing PhishGuard System Endpoints ---")
+from app import app
+
+client = app.test_client()
+
+print("=" * 60)
+print(" RUNNING PHISHGUARD SYSTEM VERIFICATION TESTS")
+print("=" * 60)
 
 # 1. Test GET /
-with urllib.request.urlopen(base + "/") as r:
-    html = r.read().decode("utf-8")
-    assert "PhishGuard" in html
-    print("[PASS] GET /: Dashboard HTML served successfully.")
+r_index = client.get("/")
+assert r_index.status_code == 200, f"Expected 200, got {r_index.status_code}"
+assert b"PhishGuard" in r_index.data
+print("[PASS] GET / : Dashboard HTML served successfully.")
 
 # 2. Test GET /health
-with urllib.request.urlopen(base + "/health") as r:
-    data = json.loads(r.read().decode("utf-8"))
-    assert data["model_loaded"] is True
-    print("[PASS] GET /health: Model is loaded and healthy.")
+r_health = client.get("/health")
+assert r_health.status_code == 200
+data_health = r_health.get_json()
+assert data_health["model_loaded"] is True
+assert data_health["features_count"] == 17
+print("[PASS] GET /health : Model is loaded and healthy with 17 features.")
 
 # 3. Test GET /api/metrics
-with urllib.request.urlopen(base + "/api/metrics") as r:
-    data = json.loads(r.read().decode("utf-8"))
-    assert data["success"] is True
-    m = data["metrics"]
-    print(f"[PASS] GET /api/metrics: Accuracy = {m['accuracy']*100:.2f}%, F1 = {m['f1_score']*100:.2f}%")
+r_metrics = client.get("/api/metrics")
+assert r_metrics.status_code == 200
+data_metrics = r_metrics.get_json()
+assert data_metrics["success"] is True
+m = data_metrics["metrics"]
+assert m["accuracy"] >= 0.95
+print(f"[PASS] GET /api/metrics : Accuracy = {m['accuracy']*100:.2f}%, F1 = {m['f1_score']*100:.2f}%, Engine = {m.get('engine', 'N/A')}")
 
-# 4. Test POST /predict with Legitimate URL
-req_legit = urllib.request.Request(
-    base + "/predict",
-    data=json.dumps({"url": "https://www.uni-mainz.de"}).encode("utf-8"),
-    headers={"Content-Type": "application/json"}
-)
-with urllib.request.urlopen(req_legit) as r:
-    res = json.loads(r.read().decode("utf-8"))
-    print(f"[PASS] Legitimate URL Test:")
-    print(f"       Target: {res['url']}")
-    print(f"       Verdict: {res['verdict']} ({res['prediction']})")
-    print(f"       Risk Score: {res['risk_score']}%, Confidence: {res['confidence']}%")
+# 4. Test Legitimate URLs
+legit_test_cases = [
+    "https://www.uni-mainz.de",
+    "google.com",
+    "https://github.com",
+    "wikipedia.org",
+    "https://www.youtube.com"
+]
 
-# 5. Test POST /predict with Phishing URL
-req_phish = urllib.request.Request(
-    base + "/predict",
-    data=json.dumps({"url": "http://secure-login.paypal.account-verify.com/login?id=999&auth=fail"}).encode("utf-8"),
-    headers={"Content-Type": "application/json"}
-)
-with urllib.request.urlopen(req_phish) as r:
-    res = json.loads(r.read().decode("utf-8"))
-    print(f"[PASS] Phishing URL Test:")
-    print(f"       Target: {res['url']}")
-    print(f"       Verdict: {res['verdict']} ({res['prediction']})")
-    print(f"       Risk Score: {res['risk_score']}%, Confidence: {res['confidence']}%")
+for url in legit_test_cases:
+    resp = client.post("/predict", json={"url": url})
+    assert resp.status_code == 200, f"Failed on {url}"
+    res = resp.get_json()
+    assert res["success"] is True
+    assert res["verdict"] == "legitimate", f"Expected legitimate for {url}, got {res['verdict']} (risk: {res['risk_score']}%)"
+    assert res["risk_score"] < 40.0, f"Expected risk < 40% for {url}, got {res['risk_score']}%"
+    print(f"[PASS] Legitimate URL : {url:30} -> Verdict: {res['verdict']} (Risk: {res['risk_score']}%, Conf: {res['confidence']}%)")
 
-print("\nAll integration verification tests passed successfully!")
+# 5. Test Phishing URLs
+phish_test_cases = [
+    "http://secure-login.paypal.account-verify.com/login?id=999&auth=fail",
+    "http://www.teramill.com",
+    "http://192.168.1.1/admin-login",
+    "http://www.ooguy.com"
+]
+
+for url in phish_test_cases:
+    resp = client.post("/predict", json={"url": url})
+    assert resp.status_code == 200, f"Failed on {url}"
+    res = resp.get_json()
+    assert res["success"] is True
+    assert res["verdict"] == "phishing", f"Expected phishing for {url}, got {res['verdict']} (risk: {res['risk_score']}%)"
+    assert res["risk_score"] > 60.0, f"Expected risk > 60% for {url}, got {res['risk_score']}%"
+    print(f"[PASS] Phishing URL   : {url:68} -> Verdict: {res['verdict']} (Risk: {res['risk_score']}%, Conf: {res['confidence']}%)")
+
+print("\n" + "=" * 60)
+print(" ALL SYSTEM VERIFICATION TESTS PASSED SUCCESSFULLY! ")
+print("=" * 60)
