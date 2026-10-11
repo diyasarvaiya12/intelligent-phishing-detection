@@ -1,7 +1,4 @@
-/**
- * PhishGuard - Frontend Interaction & ML API Integration
- * Communicates with Flask backend (/predict, /api/metrics, /health)
- */
+
 
 document.addEventListener('DOMContentLoaded', () => {
     loadModelMetrics();
@@ -68,7 +65,7 @@ async function loadModelMetrics() {
     }
 }
 
-// Scan URL handler
+// Scan-URL handler
 async function scanUrl() {
     const urlInput = document.getElementById('urlInput');
     const rawUrl = urlInput.value.trim();
