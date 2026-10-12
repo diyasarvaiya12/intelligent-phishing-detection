@@ -24,24 +24,38 @@ app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 
 # Load trained model
 model = None
-if os.path.exists(MODEL_PATH):
-    try:
-        with open(MODEL_PATH, "rb") as f:
-            model = pickle.load(f)
-        print(f"[OK] Trained model loaded successfully from {MODEL_PATH}")
-    except Exception as e:
-        print(f"[Warning] Failed to load model: {e}")
-else:
-    print(f"[Warning] model.pkl not found at {MODEL_PATH}. Please run train_model.py first.")
-
-# Load model metrics
 metrics_data = {}
-if os.path.exists(METRICS_PATH):
-    try:
-        with open(METRICS_PATH, "r", encoding="utf-8") as f:
-            metrics_data = json.load(f)
-    except Exception as e:
-        print(f"[Warning] Failed to load metrics: {e}")
+
+def load_or_train_model():
+    global model, metrics_data
+    if os.path.exists(MODEL_PATH):
+        try:
+            with open(MODEL_PATH, "rb") as f:
+                model = pickle.load(f)
+            print(f"[OK] Trained model loaded successfully from {MODEL_PATH}")
+        except Exception as e:
+            print(f"[Warning] Failed to load model ({e}). Auto-retraining...")
+            model = None
+
+    if model is None:
+        try:
+            import subprocess
+            train_script = os.path.join(CURRENT_DIR, "train_model.py")
+            subprocess.run([sys.executable, train_script], check=True)
+            with open(MODEL_PATH, "rb") as f:
+                model = pickle.load(f)
+            print("[OK] Trained model loaded after auto-retraining.")
+        except Exception as e:
+            print(f"[Error] Auto-training failed: {e}")
+
+    if os.path.exists(METRICS_PATH):
+        try:
+            with open(METRICS_PATH, "r", encoding="utf-8") as f:
+                metrics_data = json.load(f)
+        except Exception as e:
+            print(f"[Warning] Failed to load metrics: {e}")
+
+load_or_train_model()
 
 
 def normalize_url(url: str) -> str:
@@ -99,6 +113,10 @@ def predict():
     Validates URL, extracts lexical features, runs model prediction,
     calculates risk score and returns detailed analysis.
     """
+    global model
+    if model is None:
+        load_or_train_model()
+
     if model is None:
         return jsonify({
             "success": False,

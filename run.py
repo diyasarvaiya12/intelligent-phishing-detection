@@ -16,15 +16,30 @@ VENV_PYTHON = os.path.join(ROOT_DIR, "venv312", "Scripts", "python.exe")
 
 # Re-exec with venv312 python if invoked with external python and venv312 exists
 if os.path.exists(VENV_PYTHON) and os.path.normcase(sys.executable) != os.path.normcase(VENV_PYTHON):
-    os.execv(VENV_PYTHON, [VENV_PYTHON] + sys.argv)
+    import subprocess
+    sys.exit(subprocess.call([VENV_PYTHON] + sys.argv))
 
 sys.path.insert(0, BACKEND_DIR)
 
-# 1. Ensure trained model exists; if not, train it automatically
+# 1. Ensure trained model exists and can be loaded; if not, train it automatically
 MODEL_PATH = os.path.join(BACKEND_DIR, "model.pkl")
-if not os.path.exists(MODEL_PATH):
+need_train = not os.path.exists(MODEL_PATH)
+if not need_train:
+    try:
+        import pickle
+        try:
+            from rf_engine import PureRandomForestClassifier
+        except ImportError:
+            pass
+        with open(MODEL_PATH, "rb") as f:
+            pickle.load(f)
+    except Exception as e:
+        print(f"[Notice] Existing model could not be loaded ({e}). Auto-retraining...")
+        need_train = True
+
+if need_train:
     print("=" * 60)
-    print(" model.pkl not found. Auto-training model first...")
+    print(" Auto-training model...")
     print("=" * 60)
     import subprocess
     subprocess.run([sys.executable, os.path.join(BACKEND_DIR, "train_model.py")], check=True)
