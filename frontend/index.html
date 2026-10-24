@@ -145,6 +145,15 @@
                 <span>Quishing (QR) Scanner</span>
                 <span class="tab-tag new">CV 2.0</span>
             </button>
+            <button class="tab-btn" id="tabBtnIntel" onclick="switchSuiteTab('intel')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <span>IP Geo-Intel & Audit Vault</span>
+                <span class="tab-tag new">THREAT INTEL</span>
+            </button>
         </nav>
 
         <!-- ============================================================== -->
@@ -350,70 +359,6 @@
                                     <span>Forensic Audit Cert</span>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Live IP Geolocation & ASN Threat Intelligence Deck -->
-                <div class="geo-threat-deck" id="geoThreatDeck">
-                    <div class="deck-header">
-                        <div>
-                            <div class="deck-kicker">NETWORK TELEMETRY & GEO-INTELLIGENCE</div>
-                            <h3 class="deck-title">Live Host IP, BGP ASN & Infrastructure Radar</h3>
-                        </div>
-                        <div class="deck-filter-pills">
-                            <span class="pill-stat" id="geoCountryBadge">🌍 Resolving Host</span>
-                            <span class="pill-stat safe-pill" id="geoReputationBadge">Threat Intel Active</span>
-                        </div>
-                    </div>
-
-                    <div class="geo-quad-grid">
-                        <!-- 1. Country & Location -->
-                        <div class="geo-card">
-                            <div class="geo-card-header">
-                                <span class="geo-card-title">Geographical Location</span>
-                                <span class="geo-flag" id="geoFlagEmoji">🌐</span>
-                            </div>
-                            <div class="geo-val-big" id="geoCountryText">Resolving...</div>
-                            <div class="geo-sub-text" id="geoCityRegion">City, Region • Timezone</div>
-                        </div>
-
-                        <!-- 2. Primary IP & Reverse DNS -->
-                        <div class="geo-card">
-                            <div class="geo-card-header">
-                                <span class="geo-card-title">Primary IP & PTR Record</span>
-                                <span class="t-badge neutral">DNS A-RECORD</span>
-                            </div>
-                            <div class="geo-val-big font-mono" id="geoIpAddress">0.0.0.0</div>
-                            <div class="geo-sub-text font-mono text-truncate" id="geoReverseDns">Reverse PTR: Resolving...</div>
-                        </div>
-
-                        <!-- 3. Autonomous System (ASN) & ISP -->
-                        <div class="geo-card">
-                            <div class="geo-card-header">
-                                <span class="geo-card-title">BGP ASN & Infrastructure</span>
-                                <span class="t-badge neutral">BGP REGISTRY</span>
-                            </div>
-                            <div class="geo-val-big" id="geoAsnText">AS-UNKNOWN</div>
-                            <div class="geo-sub-text" id="geoIspOrg">Host Organization / ISP</div>
-                        </div>
-
-                        <!-- 4. Network Threat Rating -->
-                        <div class="geo-card">
-                            <div class="geo-card-header">
-                                <span class="geo-card-title">Infrastructure Threat Score</span>
-                                <span class="t-badge" id="geoRiskPill">EVALUATING</span>
-                            </div>
-                            <div class="geo-val-big" id="geoThreatScore">0.0%</div>
-                            <div class="geo-sub-text" id="geoReputationDesc">Network risk assessment</div>
-                        </div>
-                    </div>
-
-                    <!-- Security Observations & Indicators -->
-                    <div class="geo-indicators-box" id="geoIndicatorsBox">
-                        <div class="geo-ind-title">Network Infrastructure Security Findings:</div>
-                        <div class="geo-ind-list" id="geoIndicatorsList">
-                            <div class="geo-ind-item">Performing real-time BGP routing and geolocation intelligence analysis...</div>
                         </div>
                     </div>
                 </div>
@@ -872,6 +817,171 @@
         </div>
 
         <!-- ============================================================== -->
+        <!-- TAB 5: IP GEO-INTEL & FORENSIC AUDIT VAULT                     -->
+        <!-- ============================================================== -->
+        <div id="panelThreatIntel" class="suite-panel hidden">
+            <section class="tool-console">
+                <div class="console-box">
+                    <div class="tool-box-header">
+                        <div class="tool-title-group">
+                            <h3 class="tool-title">Live IP Geolocation, BGP ASN & Forensic Threat Audit Vault</h3>
+                            <p class="tool-sub">Real-time socket DNS resolution, BGP Autonomous System identification, physical IP geolocation, and 1-click official forensic audit certificate generation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Preset Samples for Quick Testing -->
+                    <div class="preset-strip" style="margin-top: 0; margin-bottom: 16px;">
+                        <span class="preset-label">Test Targets:</span>
+                        <div class="chips-container">
+                            <button type="button" class="demo-chip legit" onclick="inspectStandaloneIntel('google.com')">
+                                <span class="demo-dot safe"></span>
+                                <span>google.com (Google Anycast)</span>
+                                <span class="tag-mini">Tier-1 CDN</span>
+                            </button>
+                            <button type="button" class="demo-chip legit" onclick="inspectStandaloneIntel('github.com')">
+                                <span class="demo-dot safe"></span>
+                                <span>github.com (Microsoft ASN)</span>
+                                <span class="tag-mini">AS36459</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="inspectStandaloneIntel('http://192.168.1.1/admin')">
+                                <span class="demo-dot threat"></span>
+                                <span>192.168.1.1 (Intranet Bogon)</span>
+                                <span class="tag-mini threat">SSRF Risk</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="inspectStandaloneIntel('http://www.teramill.com')">
+                                <span class="demo-dot threat"></span>
+                                <span>teramill.com (Suspicious)</span>
+                                <span class="tag-mini threat">Untrusted</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); runStandaloneIntel();">
+                        <div class="input-hub">
+                            <div class="protocol-badge">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="2" y1="12" x2="22" y2="12"/>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                                <span class="protocol-text">HOST / DOMAIN</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="intelTargetInput" 
+                                class="console-input" 
+                                placeholder="Enter domain, IP or URL to inspect BGP ASN & Geo-Intelligence..." 
+                                autocomplete="off"
+                                spellcheck="false"
+                                required
+                            />
+                            <button type="submit" id="btnRunIntel" class="cta-scan-btn">
+                                <span>PROBE INFRASTRUCTURE</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Results Deck -->
+            <section id="standaloneIntelSection" class="report-zone hidden">
+                <div class="geo-threat-deck" style="margin-top: 0;">
+                    <div class="deck-header">
+                        <div>
+                            <div class="deck-kicker">NETWORK TELEMETRY & GEO-INTELLIGENCE</div>
+                            <h3 class="deck-title">Live Host IP, BGP ASN & Infrastructure Radar</h3>
+                        </div>
+                        <div class="deck-filter-pills">
+                            <span class="pill-stat" id="tab5CountryBadge">🌍 Resolving Host</span>
+                            <span class="pill-stat safe-pill" id="tab5ReputationBadge">Threat Intel Active</span>
+                        </div>
+                    </div>
+
+                    <div class="geo-quad-grid">
+                        <!-- 1. Country & Location -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">Geographical Location</span>
+                                <span class="geo-flag" id="tab5FlagEmoji">🌐</span>
+                            </div>
+                            <div class="geo-val-big" id="tab5CountryText">Resolving...</div>
+                            <div class="geo-sub-text" id="tab5CityRegion">City, Region • Timezone</div>
+                        </div>
+
+                        <!-- 2. Primary IP & Reverse DNS -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">Primary IP & PTR Record</span>
+                                <span class="t-badge neutral">DNS A-RECORD</span>
+                            </div>
+                            <div class="geo-val-big font-mono" id="tab5IpAddress">0.0.0.0</div>
+                            <div class="geo-sub-text font-mono text-truncate" id="tab5ReverseDns">Reverse PTR: Resolving...</div>
+                        </div>
+
+                        <!-- 3. Autonomous System (ASN) & ISP -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">BGP ASN & Infrastructure</span>
+                                <span class="t-badge neutral">BGP REGISTRY</span>
+                            </div>
+                            <div class="geo-val-big" id="tab5AsnText">AS-UNKNOWN</div>
+                            <div class="geo-sub-text" id="tab5IspOrg">Host Organization / ISP</div>
+                        </div>
+
+                        <!-- 4. Network Threat Rating -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">Infrastructure Threat Score</span>
+                                <span class="t-badge" id="tab5RiskPill">EVALUATING</span>
+                            </div>
+                            <div class="geo-val-big" id="tab5ThreatScore">0.0%</div>
+                            <div class="geo-sub-text" id="tab5ReputationDesc">Network risk assessment</div>
+                        </div>
+                    </div>
+
+                    <!-- Security Observations & Indicators -->
+                    <div class="geo-indicators-box">
+                        <div class="geo-ind-title">Network Infrastructure Security Findings:</div>
+                        <div class="geo-ind-list" id="tab5IndicatorsList">
+                            <div class="geo-ind-item">Performing real-time BGP routing and geolocation intelligence analysis...</div>
+                        </div>
+                    </div>
+
+                    <!-- Forensic Audit Vault Certificate Action Banner -->
+                    <div class="verdict-banner" style="margin-top: 24px; margin-bottom: 0; background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(99, 102, 241, 0.12)); border-color: var(--border-cyan);">
+                        <div class="verdict-main" style="margin-bottom: 0; align-items: center;">
+                            <div class="cert-agency-seal" style="width: 56px; height: 56px;">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    <path d="m9 12 2 2 4-4"/>
+                                </svg>
+                            </div>
+                            <div class="verdict-details">
+                                <div class="status-kicker" style="color: var(--neon-cyan);">CRYPTOGRAPHIC FORENSIC AUDIT VAULT</div>
+                                <h3 class="verdict-heading" style="font-size: 1.4rem; margin-bottom: 4px;">Generate Official Cyber Threat Audit Certificate</h3>
+                                <p class="verdict-narrative" style="margin-bottom: 0;">Creates an immutable SHA-256 sealed digital audit report with SOC containment directives, formatted for official printing and PDF submission.</p>
+                            </div>
+                            <div>
+                                <button type="button" class="cta-scan-btn" onclick="openAuditCertificateModal()" style="padding: 12px 20px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                    <span>GENERATE AUDIT CERTIFICATE</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ============================================================== -->
         <!-- COMMON SECTION: MODEL TELEMETRY & CONFUSION MATRIX             -->
         <!-- ============================================================== -->
         <section class="telemetry-section" id="modelTelemetrySection">
@@ -1044,6 +1154,21 @@
                     </div>
                     <h4 class="wf-title">Live Cryptographic Grade</h4>
                     <p class="wf-desc">Performs real TLS handshake, parses X.509 cert, assigns CNS Grade A+ to F, and generates defense report.</p>
+                </div>
+
+                <div class="workflow-arrow">→</div>
+
+                <div class="workflow-card">
+                    <div class="wf-index">05</div>
+                    <div class="wf-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
+                    <h4 class="wf-title">BGP Geo-Intel & Audit Vault</h4>
+                    <p class="wf-desc">Resolves socket IP, queries BGP ASN registries, and generates SHA-256 sealed SOC incident audit certificates.</p>
                 </div>
             </div>
         </section>

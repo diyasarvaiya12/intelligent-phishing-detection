@@ -144,7 +144,7 @@ print(f"[PASS] QR Code Quishing Scan  : Payload = '{data_qr['payload']}', Verdic
 
 # 9. Test Live IP Geolocation & ASN Threat Intelligence
 print("\n--- Testing Live IP Geolocation & ASN Threat Intelligence ---")
-r_ip = client.post("/api/ip-threat-intel", json={"url": "google.com"})
+r_ip = client.post("/api/ip-threat-intel", json={"target": "google.com"})
 assert r_ip.status_code == 200
 data_ip = r_ip.get_json()
 assert data_ip["success"] is True

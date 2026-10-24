@@ -69,6 +69,16 @@ function setupEventListeners() {
     }
 
     // Drag and drop for QR dropzone
+    const intelInput = document.getElementById('intelTargetInput');
+    if (intelInput) {
+        intelInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                runStandaloneIntel();
+            }
+        });
+    }
+
     const dropZone = document.getElementById('qrDropZone');
     if (dropZone) {
         ['dragenter', 'dragover'].forEach(eventName => {
@@ -107,7 +117,8 @@ function switchSuiteTab(tabKey) {
         'url': { btn: 'tabBtnUrl', panel: 'panelUrlScanner' },
         'email': { btn: 'tabBtnEmail', panel: 'panelEmailAnalyzer' },
         'ssl': { btn: 'tabBtnSsl', panel: 'panelSslDnsInspector' },
-        'qr': { btn: 'tabBtnQr', panel: 'panelQrScanner' }
+        'qr': { btn: 'tabBtnQr', panel: 'panelQrScanner' },
+        'intel': { btn: 'tabBtnIntel', panel: 'panelThreatIntel' }
     };
 
     Object.keys(tabs).forEach(k => {
@@ -491,14 +502,25 @@ function renderSessionHistory() {
         row.innerHTML = `
             <div class="h-target-info">
                 <span class="h-status-dot" style="background: ${isPhish ? '#ff2a5f' : '#10b981'}; box-shadow: 0 0 8px ${isPhish ? '#ff2a5f' : '#10b981'}"></span>
-                <div>
-                    <div class="h-url-text">${item.url}</div>
-                    <div class="h-time-text">${item.time} • ${isPhish ? 'Phishing Detected' : 'Verified Legitimate'}</div>
+                <div class="h-meta-wrap">
+                    <div class="h-url-text" title="${item.url}">${item.url}</div>
+                    <div class="h-time-text">
+                        <span>${item.time}</span>
+                        <span class="h-dot-sep">•</span>
+                        <span class="h-verdict-tag ${isPhish ? 'threat' : 'safe'}">${isPhish ? 'Phishing Detected' : 'Verified Legitimate'}</span>
+                    </div>
                 </div>
             </div>
             <div class="h-actions">
                 <span class="h-risk-score ${isPhish ? 'threat' : 'safe'}">${item.risk_score}% Risk</span>
-                <button class="h-rescan-btn" onclick="switchSuiteTab('url'); selectDemo('${item.url}')">Re-scan</button>
+                <button type="button" class="h-rescan-btn" onclick="switchSuiteTab('url'); selectDemo('${item.url}')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    <span>Re-scan</span>
+                </button>
             </div>
         `;
         listElem.appendChild(row);
@@ -1032,6 +1054,140 @@ function renderIpThreatIntel(intel) {
             indList.appendChild(d);
         });
     }
+
+    // Also sync to Tab 5 if visible
+    renderStandaloneIntel(intel);
+}
+
+// -------------------------------------------------------------
+// Standalone Tab 5: IP Geo-Intel & ASN Threat Vault Controller
+// -------------------------------------------------------------
+async function runStandaloneIntel() {
+    const input = document.getElementById('intelTargetInput');
+    const target = input ? input.value.trim() : '';
+    if (!target) return;
+    await executeStandaloneIntel(target);
+}
+
+async function inspectStandaloneIntel(target) {
+    const input = document.getElementById('intelTargetInput');
+    if (input) input.value = target;
+    await executeStandaloneIntel(target);
+}
+
+async function executeStandaloneIntel(target) {
+    const btn = document.getElementById('btnRunIntel');
+    const origHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `
+            <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                <path d="M12 2a10 10 0 0 1 10 10" />
+            </svg>
+            <span>PROBING INFRASTRUCTURE...</span>
+        `;
+    }
+
+    try {
+        const res = await fetch('/api/ip-threat-intel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ target: target, url: target, domain: target })
+        });
+        const intel = await res.json();
+
+        if (intel && intel.success) {
+            renderStandaloneIntel(intel);
+            // Cache as analysis data for 1-click forensic audit certificate
+            const isHighRisk = (intel.network_threat_score >= 60 || intel.network_reputation === 'Suspicious / Threat-Linked');
+            lastAnalysisData = {
+                url: target.startsWith('http') ? target : `https://${target}`,
+                prediction: isHighRisk ? 'Phishing' : 'Legitimate',
+                risk_score: intel.network_threat_score || (isHighRisk ? 88.5 : 2.5),
+                ip_intel: intel,
+                features: {
+                    URLLength: target.length,
+                    IsDomainIP: intel.is_private ? 1 : 0,
+                    IsHTTPS: target.startsWith('https://') ? 1 : 0
+                }
+            };
+        } else {
+            alert('Host analysis warning: ' + (intel.error || 'Could not resolve host.'));
+        }
+    } catch (err) {
+        console.error('Intel probe error:', err);
+        alert('Network error while querying IP Threat Intelligence: ' + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = origHtml || `
+                <span>PROBE INFRASTRUCTURE</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+            `;
+        }
+    }
+}
+
+function renderStandaloneIntel(intel) {
+    if (!intel) return;
+
+    const section = document.getElementById('standaloneIntelSection');
+    if (section) {
+        section.classList.remove('hidden');
+        section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    const flagEmoji = document.getElementById('tab5FlagEmoji');
+    const countryText = document.getElementById('tab5CountryText');
+    const cityRegion = document.getElementById('tab5CityRegion');
+    const ipAddress = document.getElementById('tab5IpAddress');
+    const reverseDns = document.getElementById('tab5ReverseDns');
+    const asnText = document.getElementById('tab5AsnText');
+    const ispOrg = document.getElementById('tab5IspOrg');
+    const threatScore = document.getElementById('tab5ThreatScore');
+    const reputationDesc = document.getElementById('tab5ReputationDesc');
+    const countryBadge = document.getElementById('tab5CountryBadge');
+    const repBadge = document.getElementById('tab5ReputationBadge');
+    const riskPill = document.getElementById('tab5RiskPill');
+    const indList = document.getElementById('tab5IndicatorsList');
+
+    if (flagEmoji) flagEmoji.textContent = intel.flag_emoji || '🌐';
+    if (countryText) countryText.textContent = `${intel.country || 'Unknown'} (${intel.country_code || 'XX'})`;
+    if (cityRegion) cityRegion.textContent = `${intel.city || 'City'}, ${intel.region || 'Region'} • ${intel.timezone || 'UTC'}`;
+    if (ipAddress) ipAddress.textContent = intel.primary_ip || '0.0.0.0';
+    if (reverseDns) reverseDns.textContent = `PTR: ${intel.reverse_dns || 'None'}`;
+    if (asnText) asnText.textContent = intel.asn || 'AS-UNASSIGNED';
+    if (ispOrg) ispOrg.textContent = `${intel.isp || 'Host ISP'} • ${intel.organization || ''}`;
+    if (threatScore) threatScore.textContent = `${intel.network_threat_score || 0}%`;
+    if (reputationDesc) reputationDesc.textContent = intel.network_reputation || 'Evaluated';
+
+    if (countryBadge) countryBadge.textContent = `${intel.flag_emoji || '🌐'} ${intel.country || 'Global'}`;
+    if (repBadge) repBadge.textContent = intel.network_reputation || 'Active';
+
+    if (riskPill) {
+        if (intel.network_threat_score >= 60) {
+            riskPill.className = 't-badge high';
+            riskPill.textContent = 'HIGH RISK INFRA';
+            if (threatScore) threatScore.style.color = 'var(--threat-crimson)';
+        } else {
+            riskPill.className = 't-badge low';
+            riskPill.textContent = 'SECURE NETWORK';
+            if (threatScore) threatScore.style.color = 'var(--safe-emerald)';
+        }
+    }
+
+    if (indList && intel.security_indicators) {
+        indList.innerHTML = '';
+        intel.security_indicators.forEach(ind => {
+            const d = document.createElement('div');
+            d.className = 'geo-ind-item';
+            d.innerHTML = `<span style="color:var(--neon-cyan); margin-right:6px;">✦</span> ${ind}`;
+            indList.appendChild(d);
+        });
+    }
 }
 
 // -------------------------------------------------------------
@@ -1039,8 +1195,14 @@ function renderIpThreatIntel(intel) {
 // -------------------------------------------------------------
 async function openAuditCertificateModal() {
     if (!lastAnalysisData) {
-        alert('Please analyze a URL or target domain first to generate its Forensic Audit Certificate.');
-        return;
+        const intelInput = document.getElementById('intelTargetInput');
+        const target = intelInput ? intelInput.value.trim() : '';
+        if (target) {
+            await executeStandaloneIntel(target);
+        } else {
+            alert('Please inspect a host, URL, or email target first to generate its Forensic Audit Certificate.');
+            return;
+        }
     }
 
     try {
@@ -1148,3 +1310,12 @@ function copyCertificateDigest() {
         alert('Digest:\n' + text);
     });
 }
+
+// Global Window Exports for HTML Onclick Handlers
+window.switchSuiteTab = switchSuiteTab;
+window.runStandaloneIntel = runStandaloneIntel;
+window.inspectStandaloneIntel = inspectStandaloneIntel;
+window.openAuditCertificateModal = openAuditCertificateModal;
+window.closeAuditCertificateModal = closeAuditCertificateModal;
+window.copyCertificateDigest = copyCertificateDigest;
+

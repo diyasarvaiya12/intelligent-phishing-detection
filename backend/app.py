@@ -272,13 +272,14 @@ def api_scan_qr():
 @app.route("/api/ip-threat-intel", methods=["POST"])
 def api_ip_threat_intel():
     """
-    Accepts JSON: {"url": "..."} or {"domain": "..."}
+    Accepts JSON: {"target": "..."} or {"url": "..."} or {"domain": "..."}
     Performs real-time IP DNS resolution, BGP ASN lookup, and Geolocation risk analysis.
     """
     data = request.get_json(silent=True) or {}
-    target = data.get("url") or data.get("domain") or ""
+    target = data.get("target") or data.get("url") or data.get("domain") or data.get("host") or ""
+    target = str(target).strip()
     if not target:
-        return jsonify({"success": False, "error": "Target URL or domain cannot be empty."}), 400
+        return jsonify({"success": False, "error": "Target URL, host or domain cannot be empty."}), 400
 
     result = inspect_ip_threat_intel(target)
     return jsonify(result)
