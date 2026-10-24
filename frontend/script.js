@@ -7,15 +7,53 @@ let lastAnalysisData = null;
 let currentQrFile = null;
 const SESSION_HISTORY_KEY = 'phishguard_scan_history_v2';
 
+const THEME_STORAGE_KEY = 'phishguard_ui_theme';
+
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
 });
 
 function initApp() {
+    initTheme();
     checkBackendHealth();
     loadModelMetrics();
     renderSessionHistory();
     setupEventListeners();
+}
+
+// -------------------------------------------------------------
+// Theme Management (Midnight Slate vs Clean Enterprise Light)
+// -------------------------------------------------------------
+function initTheme() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'slate';
+    applyTheme(savedTheme);
+}
+
+function applyTheme(theme) {
+    const sunIcon = document.getElementById('themeIconSun');
+    const moonIcon = document.getElementById('themeIconMoon');
+    const btnText = document.getElementById('themeBtnText');
+
+    if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        document.body.classList.remove('cyber-theme');
+        if (sunIcon) sunIcon.classList.add('hidden');
+        if (moonIcon) moonIcon.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Slate Mode';
+        localStorage.setItem(THEME_STORAGE_KEY, 'light');
+    } else {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('cyber-theme');
+        if (sunIcon) sunIcon.classList.remove('hidden');
+        if (moonIcon) moonIcon.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Light Mode';
+        localStorage.setItem(THEME_STORAGE_KEY, 'slate');
+    }
+}
+
+function toggleTheme() {
+    const isLight = document.body.classList.contains('light-theme');
+    applyTheme(isLight ? 'slate' : 'light');
 }
 
 function setupEventListeners() {
@@ -799,6 +837,22 @@ function renderSslReport(data) {
 // -------------------------------------------------------------
 // TAB 4: Quishing (QR Code) Scanner Controller
 // -------------------------------------------------------------
+async function loadSampleQrImage(samplePath, fileName) {
+    try {
+        const response = await fetch(samplePath);
+        if (!response.ok) throw new Error('Sample image not found');
+        const blob = await response.blob();
+        const file = new File([blob], fileName, { type: 'image/png' });
+        handleQrFile(file);
+        setTimeout(() => {
+            executeQrScan();
+        }, 150);
+    } catch (err) {
+        console.error('Error loading sample QR:', err);
+        alert('Could not load sample QR: ' + err.message);
+    }
+}
+
 function onQrFileSelected(event) {
     const file = event.target.files[0];
     if (file) handleQrFile(file);

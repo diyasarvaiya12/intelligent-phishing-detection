@@ -41,6 +41,23 @@
                     <span class="live-dot" id="systemDot"></span>
                     <span class="telemetry-text" id="systemStatusText">CORE ONLINE • MODEL 99.73% ACCURACY</span>
                 </div>
+                <button class="nav-ghost-btn theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Theme (Midnight Slate / Clean Light)">
+                    <svg id="themeIconSun" class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg id="themeIconMoon" class="theme-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <span id="themeBtnText">Light Mode</span>
+                </button>
                 <button class="nav-ghost-btn" onclick="scrollToMetrics()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 3v18h18"/>
@@ -66,6 +83,29 @@
             <p class="hero-lead">
                 Comprehensive zero-day threat defense: Real-time 17-feature lexical URL scanning, Email/SMS social engineering heuristics, live cryptographic SSL/TLS handshake inspection, and Quishing QR code analysis.
             </p>
+
+            <!-- Executive Benchmark Highlights Strip -->
+            <div class="hero-stats-strip">
+                <div class="hero-stat-item">
+                    <div class="hero-stat-val">235,795</div>
+                    <div class="hero-stat-desc">UCI PhiUSIIL URLs</div>
+                </div>
+                <div class="hero-stat-sep"></div>
+                <div class="hero-stat-item highlight-cyan">
+                    <div class="hero-stat-val">99.73%</div>
+                    <div class="hero-stat-desc">Test Accuracy</div>
+                </div>
+                <div class="hero-stat-sep"></div>
+                <div class="hero-stat-item highlight-purple">
+                    <div class="hero-stat-val">17 Vectors</div>
+                    <div class="hero-stat-desc">Structural Extraction</div>
+                </div>
+                <div class="hero-stat-sep"></div>
+                <div class="hero-stat-item highlight-emerald">
+                    <div class="hero-stat-val">&lt; 15 ms</div>
+                    <div class="hero-stat-desc">Inference Latency</div>
+                </div>
+            </div>
         </section>
 
         <!-- Suite Multi-Tool Navigation Tabs -->
@@ -657,6 +697,23 @@
                         <div class="tool-title-group">
                             <h3 class="tool-title">Quishing (QR Code Phishing) Detector</h3>
                             <p class="tool-sub">Computer-vision driven QR code decoding using OpenCV with instant 17-feature Random Forest threat evaluation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Preset Samples for Viva & Quick Testing -->
+                    <div class="preset-strip" style="margin-top: 0; margin-bottom: 16px;">
+                        <span class="preset-label">Test Samples:</span>
+                        <div class="chips-container">
+                            <button type="button" class="demo-chip legit" onclick="loadSampleQrImage('/samples/qr_legit.png', 'google-legit-qr.png')">
+                                <span class="demo-dot safe"></span>
+                                <span>Sample Benign QR (google.com)</span>
+                                <span class="tag-mini">Benign</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="loadSampleQrImage('/samples/qr_phish.png', 'paypal-quishing-attack.png')">
+                                <span class="demo-dot threat"></span>
+                                <span>Sample Quishing QR (PayPal Spoof)</span>
+                                <span class="tag-mini threat">Attack</span>
+                            </button>
                         </div>
                     </div>
 
