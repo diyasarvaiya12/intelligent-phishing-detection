@@ -1919,3 +1919,379 @@ body.light-theme .tab-tag {
         gap: 12px;
     }
 }
+/* ==========================================================
+   Pipeline Architecture Workflow Section (Multi-Vector Defense)
+   ========================================================== */
+.workflow-section {
+    max-width: 1080px;
+    margin: 60px auto 40px;
+    padding: 0 10px;
+}
+
+.workflow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.workflow-card {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.workflow-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-cyan);
+    box-shadow: 0 16px 36px -10px var(--cyan-glow);
+}
+
+.wf-index {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--neon-cyan);
+    background: var(--bg-accent);
+    border: 1px solid var(--border-cyan);
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+}
+
+.wf-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(99, 102, 241, 0.2));
+    border: 1px solid var(--border-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-cyan);
+    margin-bottom: 14px;
+    box-shadow: 0 0 16px -4px var(--cyan-glow);
+}
+
+body.light-theme .wf-icon-box {
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.1), rgba(37, 99, 235, 0.15));
+}
+
+.wf-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.wf-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.workflow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-cyan);
+    font-size: 1.3rem;
+    font-weight: 800;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--bg-accent);
+    border: 1px solid var(--border-cyan);
+    flex-shrink: 0;
+    box-shadow: 0 0 14px -2px var(--cyan-glow);
+    animation: arrowPulse 2s infinite ease-in-out;
+}
+
+@keyframes arrowPulse {
+    0%, 100% { transform: translateX(0); opacity: 0.8; }
+    50% { transform: translateX(4px); opacity: 1; }
+}
+
+@media (max-width: 900px) {
+    .workflow-steps {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .workflow-arrow {
+        transform: rotate(90deg);
+        align-self: center;
+        margin: 6px 0;
+        animation: arrowPulseVertical 2s infinite ease-in-out;
+    }
+    @keyframes arrowPulseVertical {
+        0%, 100% { transform: rotate(90deg) translateX(0); opacity: 0.8; }
+        50% { transform: rotate(90deg) translateX(4px); opacity: 1; }
+    }
+}
+
+/* ==========================================================
+   Confusion Matrix Custom Cells & Actions
+   ========================================================== */
+.table-container {
+    overflow-x: auto;
+}
+
+.cell-true {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+}
+
+.cell-false {
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+}
+
+.cell-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+.cell-rate {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--safe-emerald);
+    text-align: center;
+}
+
+.brand-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.shield-icon {
+    color: var(--neon-cyan);
+}
+
+.theme-icon {
+    display: inline-block;
+}
+
+.json-btn, .copy-url-btn, .clear-history-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.json-btn:hover, .copy-url-btn:hover, .clear-history-btn:hover {
+    border-color: var(--border-cyan);
+    color: var(--neon-cyan);
+    background: var(--bg-card-hover);
+    transform: translateY(-1px);
+}
+
+.empty-history {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.tool-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.qr-drop-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* ==========================================================
+   Circular Gauge, Progress & Inspection Deck Enhancements
+   ========================================================== */
+.circular-gauge-box {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 14px auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-gauge-box .gauge-svg {
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+    fill: none;
+    stroke: var(--border-subtle);
+}
+
+.gauge-fill-circle {
+    fill: none;
+    stroke: var(--safe-emerald);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease-in-out, stroke 0.4s ease;
+}
+
+.gauge-number-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+
+.gauge-score {
+    font-family: var(--font-mono);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.gauge-percent {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-left: 2px;
+}
+
+.gauge-caption {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 4px;
+}
+
+.progress-track {
+    width: 100%;
+    height: 6px;
+    background: var(--border-subtle);
+    border-radius: 4px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #60a5fa);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.deck-filter-pills {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.pill-stat {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--bg-accent);
+    color: var(--neon-cyan);
+    border: 1px solid var(--border-cyan);
+}
+
+.pill-stat.safe-pill {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--safe-emerald);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.features-deck {
+    margin-top: 32px;
+}
+
+.recent-scans-deck {
+    max-width: 980px;
+    margin: 40px auto;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cta-icon {
+    flex-shrink: 0;
+}
+
+.cta-text {
+    font-weight: 800;
+}
+
+.t-footer-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.legit {
+    cursor: pointer;
+}
+
+.matrix-content {
+    margin-top: 16px;
+}
+body.cyber-theme {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+}
+
+.gauge-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.protocol-text {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--neon-cyan);
+}
+
+.telemetry-text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--safe-emerald);
+}
