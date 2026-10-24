@@ -520,20 +520,20 @@ slide13 = prs.slides.add_slide(blank_layout)
 set_slide_background(slide13)
 add_header(slide13, "Phase 1 Accomplishments & Current Working Status", "Project Milestone Summary", 13)
 
-add_card(slide13, 0.8, 1.8, 5.7, 4.8, "What Is Fully Functional (100% Operational)", [
+add_card(slide13, 0.8, 1.8, 5.7, 4.8, "Multi-Vector Defense Capabilities (100% Operational)", [
     "Production ML Model: 100-tree Random Forest retrained on 235k rows with 99.73% accuracy.",
-    "Real-Time API: Flask microservice serving sub-15ms predictions and dynamic model metrics.",
-    "Accurate Lexical Extractor: 17 feature extractors with zero parity mismatch against benchmark.",
-    "Cyber Command Center UI: Responsive frontend with radar scanner, SVG gauge, and export.",
-    "Session History Logger: Automatically logs recent inspections with 1-click re-test.",
+    "Email & SMS NLP Analyzer: Detects social engineering urgency, fear, coercion & scans embedded links.",
+    "Live SSL / DNS Inspector: Cryptographic X.509 cert validation, TLS 1.3 verification, & CNS Grade A+ to F.",
+    "Quishing (QR) Detector: OpenCV computer vision decodes QR codes and pipes payloads to RF model.",
+    "Cyber Command Center UI: Responsive 4-tab security suite with SVG risk dial and radar scanner.",
     "Integrated Test Suite: backend/test_system.py passes 100% automated assertion tests."
 ], C_SAFE_BG, C_SAFE)
 
 add_card(slide13, 6.8, 1.8, 5.7, 4.8, "Codebase & Deployment Hygiene", [
-    "Clean Project Architecture: Modular separation between backend, frontend, and data directories.",
+    "Clean Modular Architecture: email_analyzer.py, ssl_dns_inspector.py, qr_scanner.py, app.py.",
     "Single-Click Launch: run.py script handles model checks and opens browser automatically.",
-    "Git Version Control: Working branch shantanu-changes pushed to GitHub with tag ui-and-accuracy.",
-    "Zero Memory Leak: Efficient lightweight inference suitable for edge deployment or cloud hosting.",
+    "Zero External Paid APIs: Entire system runs locally using scikit-learn, OpenCV, Pillow, and Python sockets.",
+    "Git Version Control: Clean branches and tags (shantanu-changes branch, ui-and-accuracy tag).",
     "Documentation: Complete README.md and Walkthrough logs ready for project submission."
 ])
 

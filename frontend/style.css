@@ -1548,6 +1548,263 @@ body.cyber-theme {
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ==========================================================
+   Cyber Defense Suite Multi-Tool Navigation & Panel Styling
+   ========================================================== */
+
+.cyber-tabs-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    max-width: 980px;
+    margin: 0 auto 34px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: rgba(13, 18, 32, 0.75);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(12px);
+}
+
+.tab-btn:hover {
+    border-color: var(--border-cyan);
+    color: #ffffff;
+    background: rgba(18, 25, 45, 0.85);
+    transform: translateY(-1px);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(59, 130, 246, 0.18));
+    border-color: var(--neon-cyan);
+    color: #ffffff;
+    box-shadow: 0 0 20px -3px var(--cyan-glow);
+}
+
+.tab-btn.active svg {
+    color: var(--neon-cyan);
+}
+
+.tab-tag {
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+}
+
+.tab-tag.new {
+    background: rgba(0, 240, 255, 0.15);
+    color: var(--neon-cyan);
+}
+
+.suite-panel {
+    display: none;
+}
+
+.suite-panel.active {
+    display: block;
+    animation: fadeInPanel 0.35s ease-out;
+}
+
+@keyframes fadeInPanel {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tool Console Generic */
+.tool-console {
+    max-width: 980px;
+    margin: 0 auto 36px;
+}
+
+.tool-box-header {
+    margin-bottom: 16px;
+}
+
+.tool-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.tool-sub {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+/* Textarea Hub (Email Analyzer) */
+.textarea-hub {
+    background: var(--bg-input);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    transition: all 0.25s ease;
+}
+
+.textarea-hub:focus-within {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 25px -4px var(--cyan-glow);
+}
+
+.console-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.console-textarea::placeholder {
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+}
+
+.textarea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Cryptographic Grade Hull (Live SSL/DNS) */
+.grade-hull {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 2.4rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.grade-hull.grade-aplus, .grade-hull.grade-a {
+    background: rgba(16, 185, 129, 0.15);
+    border: 2px solid var(--safe-emerald);
+    color: var(--safe-emerald);
+    box-shadow: 0 0 25px -3px var(--safe-glow);
+}
+
+.grade-hull.grade-b, .grade-hull.grade-c {
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid #f59e0b;
+    color: #f59e0b;
+    box-shadow: 0 0 25px -3px rgba(245, 158, 11, 0.35);
+}
+
+.grade-hull.grade-f {
+    background: rgba(255, 42, 95, 0.15);
+    border: 2px solid var(--threat-crimson);
+    color: var(--threat-crimson);
+    box-shadow: 0 0 25px -3px var(--threat-glow);
+}
+
+/* Quishing (QR Code) Dropzone & Preview */
+.qr-dropzone {
+    border: 2px dashed rgba(0, 240, 255, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 38px 24px;
+    text-align: center;
+    background: rgba(8, 12, 22, 0.6);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.qr-dropzone:hover {
+    border-color: var(--neon-cyan);
+    background: rgba(0, 240, 255, 0.04);
+    box-shadow: 0 0 25px -5px var(--cyan-glow);
+}
+
+.qr-icon-hull {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--neon-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+}
+
+.qr-drop-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.accent-link {
+    color: var(--neon-cyan);
+    text-decoration: underline;
+}
+
+.qr-drop-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.qr-preview-container {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 18px;
+    background: rgba(8, 12, 22, 0.7);
+    border: 1px solid var(--border-cyan);
+    border-radius: var(--radius-md);
+}
+
+.qr-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 4px;
+}
+
+.qr-preview-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.qr-name {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
 /* Utility Helpers */
 .hidden {
     display: none !important;
@@ -1574,6 +1831,10 @@ body.cyber-theme {
     .hero-headline {
         font-size: 2.1rem;
     }
+    .cyber-tabs-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
     .telemetry-deck {
         grid-template-columns: 1fr;
     }
@@ -1596,4 +1857,10 @@ body.cyber-theme {
     .nav-actions .telemetry-pill {
         display: none;
     }
+    .qr-preview-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
 }
+

@@ -9,11 +9,16 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CURRENT_DIR)
 
 from feature_extraction import extract_features, FEATURE_COLUMNS
+from email_analyzer import analyze_message_full
+from ssl_dns_inspector import inspect_live_security
+from qr_scanner import analyze_quishing_full
+
 # Import rf_engine so pickle can deserialize PureRandomForestClassifier if used
 try:
     from rf_engine import PureRandomForestClassifier, PureDecisionTreeClassifier, PureDecisionNode
 except ImportError:
     pass
+
 
 # Paths
 FRONTEND_DIR = os.path.join(CURRENT_DIR, "..", "frontend")
@@ -197,6 +202,62 @@ def predict():
             "success": False,
             "error": f"Failed to analyze URL: {str(e)}"
         }), 500
+
+
+@app.route("/api/analyze-message", methods=["POST"])
+def api_analyze_message():
+    """
+    Accepts JSON: {"text": "..."}
+    Analyzes message for psychological social engineering lures and evaluates embedded links.
+    """
+    if model is None:
+        return jsonify({"success": False, "error": "ML model is not loaded on server."}), 503
+
+    data = request.get_json(silent=True) or {}
+    text = data.get("text", "").strip()
+    if not text:
+        return jsonify({"success": False, "error": "Message body cannot be empty."}), 400
+
+    result = analyze_message_full(text, model, normalize_url)
+    return jsonify(result)
+
+
+@app.route("/api/inspect-ssl-dns", methods=["POST"])
+def api_inspect_ssl_dns():
+    """
+    Accepts JSON: {"url": "..."}
+    Performs real-time DNS resolution and live cryptographic SSL/TLS certificate inspection.
+    """
+    data = request.get_json(silent=True) or {}
+    target = data.get("url", "").strip()
+    if not target:
+        return jsonify({"success": False, "error": "Target URL or domain cannot be empty."}), 400
+
+    result = inspect_live_security(target)
+    return jsonify(result)
+
+
+@app.route("/api/scan-qr", methods=["POST"])
+def api_scan_qr():
+    """
+    Accepts multipart/form-data with file 'qr_image' or raw image binary body.
+    Decodes QR code and runs full Random Forest + SSL threat analysis on target payload.
+    """
+    if model is None:
+        return jsonify({"success": False, "error": "ML model is not loaded on server."}), 503
+
+    image_bytes = None
+    if "qr_image" in request.files:
+        file = request.files["qr_image"]
+        image_bytes = file.read()
+    elif request.data:
+        image_bytes = request.data
+
+    if not image_bytes:
+        return jsonify({"success": False, "error": "Please provide an image file containing a QR code."}), 400
+
+    result = analyze_quishing_full(image_bytes, model, normalize_url)
+    return jsonify(result)
 
 
 if __name__ == "__main__":

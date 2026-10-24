@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhishGuard AI | Next-Gen Intelligent Phishing Detection & Threat Intelligence</title>
-    <meta name="description" content="Enterprise-grade AI Phishing URL Detection & Real-time Lexical Threat Analysis powered by Random Forest Machine Learning">
+    <title>PhishGuard AI | Next-Gen Intelligent Phishing Defense Suite</title>
+    <meta name="description" content="Enterprise-grade AI Phishing URL Detection, Email Social Engineering Analysis, Live SSL/TLS DNS Inspection, and Quishing QR Scanner">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,8 +31,8 @@
                     <div class="pulse-ring"></div>
                 </div>
                 <div class="brand-meta">
-                    <div class="brand-title">PHISHGUARD <span class="ai-tag">AI 2.0</span></div>
-                    <div class="brand-sub">INTELLIGENT THREAT INTELLIGENCE</div>
+                    <div class="brand-title">PHISHGUARD <span class="ai-tag">AI SUITE</span></div>
+                    <div class="brand-sub">APPLIED CRYPTOGRAPHY & NETWORK SECURITY</div>
                 </div>
             </div>
 
@@ -57,294 +57,693 @@
         <section class="hero-block">
             <div class="hero-chip">
                 <span class="chip-sparkle">✦</span>
-                <span>Applied Cryptography & Network Security • Machine Learning Engine</span>
+                <span>Applied Cryptography & Network Security • Multi-Vector AI Defense</span>
             </div>
             <h1 class="hero-headline">
-                Proactive URL Threat Detection <br>
-                <span class="gradient-text">Before The First Click.</span>
+                Intelligent Phishing Detection <br>
+                <span class="gradient-text">& Threat Prevention Suite.</span>
             </h1>
             <p class="hero-lead">
-                Inspect malicious links in milliseconds. Analyzes 17 structural lexical vectors using an ensemble Random Forest trained on 235,000+ benchmark domains.
+                Comprehensive zero-day threat defense: Real-time 17-feature lexical URL scanning, Email/SMS social engineering heuristics, live cryptographic SSL/TLS handshake inspection, and Quishing QR code analysis.
             </p>
         </section>
 
-        <!-- Scanner Card -->
-        <section class="scanner-console">
-            <div class="console-box">
-                <form id="urlScanForm" onsubmit="event.preventDefault(); startScan();">
-                    <div class="input-hub">
-                        <div class="protocol-badge">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <line x1="2" y1="12" x2="22" y2="12"/>
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                            </svg>
-                            <span class="protocol-text">TARGET URL</span>
-                        </div>
-                        <input 
-                            type="text" 
-                            id="targetUrlInput" 
-                            class="console-input" 
-                            placeholder="Enter any domain or full URL (e.g., google.com, login-verify.account-service.net)..." 
-                            autocomplete="off" 
-                            spellcheck="false"
-                            required
-                        />
-                        <button type="button" class="tool-btn" title="Paste from clipboard" onclick="pasteClipboard()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                            </svg>
-                        </button>
-                        <button type="button" class="tool-btn" title="Clear input" onclick="clearInput()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                        <button type="submit" id="submitScanBtn" class="cta-scan-btn">
-                            <span class="cta-text">ANALYZE URL</span>
-                            <svg class="cta-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="m21 21-4.3-4.3"/>
-                            </svg>
-                        </button>
-                    </div>
-                </form>
+        <!-- Suite Multi-Tool Navigation Tabs -->
+        <nav class="cyber-tabs-nav">
+            <button class="tab-btn active" id="tabBtnUrl" onclick="switchSuiteTab('url')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <span>URL Threat Scanner</span>
+                <span class="tab-tag">CORE ML</span>
+            </button>
+            <button class="tab-btn" id="tabBtnEmail" onclick="switchSuiteTab('email')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <span>Email & SMS Phish Analyzer</span>
+                <span class="tab-tag new">NLP + LINK</span>
+            </button>
+            <button class="tab-btn" id="tabBtnSsl" onclick="switchSuiteTab('ssl')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>Live SSL / DNS Inspector</span>
+                <span class="tab-tag new">CNS CRYPTO</span>
+            </button>
+            <button class="tab-btn" id="tabBtnQr" onclick="switchSuiteTab('qr')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span>Quishing (QR) Scanner</span>
+                <span class="tab-tag new">CV 2.0</span>
+            </button>
+        </nav>
 
-                <!-- Demo Presets -->
-                <div class="preset-strip">
-                    <span class="preset-label">Instant Demo Profiles:</span>
-                    <div class="chips-container">
-                        <button type="button" class="demo-chip legit" onclick="selectDemo('https://google.com')">
-                            <span class="demo-dot safe"></span>
-                            <span>Google Search</span>
-                            <span class="tag-mini">Legit</span>
-                        </button>
-                        <button type="button" class="demo-chip legit" onclick="selectDemo('https://www.uni-mainz.de')">
-                            <span class="demo-dot safe"></span>
-                            <span>University Domain</span>
-                            <span class="tag-mini">Academic</span>
-                        </button>
-                        <button type="button" class="demo-chip legit" onclick="selectDemo('https://github.com')">
-                            <span class="demo-dot safe"></span>
-                            <span>GitHub Org</span>
-                            <span class="tag-mini">Safe</span>
-                        </button>
-                        <button type="button" class="demo-chip danger" onclick="selectDemo('http://secure-login.paypal.account-verify.com/login?id=999&auth=fail')">
-                            <span class="demo-dot threat"></span>
-                            <span>PayPal Credential Harvester</span>
-                            <span class="tag-mini threat">Phish</span>
-                        </button>
-                        <button type="button" class="demo-chip danger" onclick="selectDemo('http://192.168.1.1/admin-login')">
-                            <span class="demo-dot threat"></span>
-                            <span>Raw IP Address Host</span>
-                            <span class="tag-mini threat">Anomaly</span>
-                        </button>
-                        <button type="button" class="demo-chip danger" onclick="selectDemo('http://www.teramill.com')">
-                            <span class="demo-dot threat"></span>
-                            <span>Insecure Spoof Domain</span>
-                            <span class="tag-mini threat">Threat</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Error Toast Banner -->
-                <div id="errorToast" class="console-error hidden">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/>
-                        <line x1="12" y1="8" x2="12" y2="12"/>
-                        <line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
-                    <span id="errorMessageSpan">An error occurred while inspecting the URL.</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Scanning Terminal Animation -->
-        <section id="scannerTerminal" class="scan-terminal hidden">
-            <div class="terminal-card">
-                <div class="terminal-radar">
-                    <div class="radar-sweep-beam"></div>
-                    <div class="radar-core-glow"></div>
-                </div>
-                <div class="terminal-feed">
-                    <div class="terminal-head">
-                        <span class="live-dot pulse"></span>
-                        <span class="term-status-msg">HEURISTIC INSPECTION IN PROGRESS...</span>
-                    </div>
-                    <div class="log-stream" id="logStream">
-                        <div class="log-row"><span>[01]</span> Normalizing target domain syntax & protocol headers...</div>
-                        <div class="log-row"><span>[02]</span> Extracting 17 lexical vectors (Length, Depth, Obfuscation, Char ratios)...</div>
-                        <div class="log-row"><span>[03]</span> Querying Random Forest 100-estimator decision ensemble...</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Threat Intelligence Report -->
-        <section id="reportContainer" class="report-zone hidden">
-            <!-- Verdict Hero Banner -->
-            <div class="verdict-banner" id="verdictBanner">
-                <div class="verdict-main">
-                    <div class="verdict-icon-hull" id="verdictIconHull">
-                        <!-- SVG injected via JS -->
-                    </div>
-                    <div class="verdict-details">
-                        <div class="status-kicker" id="statusKicker">SECURITY VERDICT</div>
-                        <h2 class="verdict-heading" id="verdictHeading">URL IS LEGITIMATE</h2>
-                        <p class="verdict-narrative" id="verdictNarrative">
-                            Lexical patterns align with benign registered domains.
-                        </p>
-                        <div class="inspected-target">
-                            <span class="target-tag">TARGET</span>
-                            <span class="target-val" id="inspectedUrlVal">https://example.com</span>
-                            <button class="copy-url-btn" onclick="copyAnalyzedUrl()" title="Copy analyzed URL">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        <!-- ============================================================== -->
+        <!-- TAB 1: URL THREAT SCANNER (EXISTING FULL FUNCTIONALITY)         -->
+        <!-- ============================================================== -->
+        <div id="panelUrlScanner" class="suite-panel active">
+            <!-- Scanner Card -->
+            <section class="scanner-console">
+                <div class="console-box">
+                    <form id="urlScanForm" onsubmit="event.preventDefault(); startScan();">
+                        <div class="input-hub">
+                            <div class="protocol-badge">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="2" y1="12" x2="22" y2="12"/>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                                <span class="protocol-text">TARGET URL</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="targetUrlInput" 
+                                class="console-input" 
+                                placeholder="Enter any domain or full URL (e.g., google.com, login-verify.account-service.net)..." 
+                                autocomplete="off" 
+                                spellcheck="false"
+                                required
+                            />
+                            <button type="button" class="tool-btn" title="Paste from clipboard" onclick="pasteClipboard()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                </svg>
+                            </button>
+                            <button type="button" class="tool-btn" title="Clear input" onclick="clearInput()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                            <button type="submit" id="submitScanBtn" class="cta-scan-btn">
+                                <span class="cta-text">ANALYZE URL</span>
+                                <svg class="cta-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.3-4.3"/>
                                 </svg>
                             </button>
                         </div>
+                    </form>
+
+                    <!-- Demo Presets -->
+                    <div class="preset-strip">
+                        <span class="preset-label">Instant Demo Profiles:</span>
+                        <div class="chips-container">
+                            <button type="button" class="demo-chip legit" onclick="selectDemo('https://google.com')">
+                                <span class="demo-dot safe"></span>
+                                <span>Google Search</span>
+                                <span class="tag-mini">Legit</span>
+                            </button>
+                            <button type="button" class="demo-chip legit" onclick="selectDemo('https://www.uni-mainz.de')">
+                                <span class="demo-dot safe"></span>
+                                <span>University Domain</span>
+                                <span class="tag-mini">Academic</span>
+                            </button>
+                            <button type="button" class="demo-chip legit" onclick="selectDemo('https://github.com')">
+                                <span class="demo-dot safe"></span>
+                                <span>GitHub Org</span>
+                                <span class="tag-mini">Safe</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="selectDemo('http://secure-login.paypal.account-verify.com/login?id=999&auth=fail')">
+                                <span class="demo-dot threat"></span>
+                                <span>PayPal Credential Harvester</span>
+                                <span class="tag-mini threat">Phish</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="selectDemo('http://192.168.1.1/admin-login')">
+                                <span class="demo-dot threat"></span>
+                                <span>Raw IP Address Host</span>
+                                <span class="tag-mini threat">Anomaly</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="selectDemo('http://www.teramill.com')">
+                                <span class="demo-dot threat"></span>
+                                <span>Insecure Spoof Domain</span>
+                                <span class="tag-mini threat">Threat</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Error Toast Banner -->
+                    <div id="errorToast" class="console-error hidden">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span id="errorMessageSpan">An error occurred while inspecting the URL.</span>
                     </div>
                 </div>
+            </section>
 
-                <!-- Circular Gauge & Score Cards -->
-                <div class="telemetry-deck">
-                    <!-- Gauge Ring Card -->
-                    <div class="telemetry-card gauge-card">
-                        <div class="t-card-header">
-                            <span class="t-card-title">Threat Risk Probability</span>
-                            <span class="t-badge" id="riskLevelBadge">LOW RISK</span>
+            <!-- Scanning Terminal Animation -->
+            <section id="scannerTerminal" class="scan-terminal hidden">
+                <div class="terminal-card">
+                    <div class="terminal-radar">
+                        <div class="radar-sweep-beam"></div>
+                        <div class="radar-core-glow"></div>
+                    </div>
+                    <div class="terminal-feed">
+                        <div class="terminal-head">
+                            <span class="live-dot pulse"></span>
+                            <span class="term-status-msg">HEURISTIC INSPECTION IN PROGRESS...</span>
                         </div>
-                        <div class="circular-gauge-box">
-                            <svg class="gauge-svg" viewBox="0 0 120 120">
-                                <circle class="gauge-bg-circle" cx="60" cy="60" r="48" stroke-width="10"/>
-                                <circle class="gauge-fill-circle" id="gaugeCircle" cx="60" cy="60" r="48" stroke-width="10" stroke-dasharray="301.6" stroke-dashoffset="301.6"/>
-                            </svg>
-                            <div class="gauge-number-overlay">
-                                <span class="gauge-score" id="gaugeScoreNum">0.0</span>
-                                <span class="gauge-percent">%</span>
+                        <div class="log-stream" id="logStream">
+                            <div class="log-row"><span>[01]</span> Normalizing target domain syntax & protocol headers...</div>
+                            <div class="log-row"><span>[02]</span> Extracting 17 lexical vectors (Length, Depth, Obfuscation, Char ratios)...</div>
+                            <div class="log-row"><span>[03]</span> Querying Random Forest 100-estimator decision ensemble...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Threat Intelligence Report -->
+            <section id="reportContainer" class="report-zone hidden">
+                <!-- Verdict Hero Banner -->
+                <div class="verdict-banner" id="verdictBanner">
+                    <div class="verdict-main">
+                        <div class="verdict-icon-hull" id="verdictIconHull">
+                            <!-- SVG injected via JS -->
+                        </div>
+                        <div class="verdict-details">
+                            <div class="status-kicker" id="statusKicker">SECURITY VERDICT</div>
+                            <h2 class="verdict-heading" id="verdictHeading">URL IS LEGITIMATE</h2>
+                            <p class="verdict-narrative" id="verdictNarrative">
+                                Lexical patterns align with benign registered domains.
+                            </p>
+                            <div class="inspected-target">
+                                <span class="target-tag">TARGET</span>
+                                <span class="target-val" id="inspectedUrlVal">https://example.com</span>
+                                <button class="copy-url-btn" onclick="copyAnalyzedUrl()" title="Copy analyzed URL">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                        <div class="gauge-caption" id="gaugeCaption">Safe browsing profile detected</div>
                     </div>
 
-                    <!-- Model Confidence Card -->
-                    <div class="telemetry-card">
-                        <div class="t-card-header">
-                            <span class="t-card-title">Model Confidence</span>
-                            <span class="t-badge neutral">STATISTICAL</span>
-                        </div>
-                        <div class="kpi-big-num accent-cyan" id="confidenceNum">99.8%</div>
-                        <div class="kpi-sub">Calculated certainty across 100 ensemble decision trees</div>
-                        <div class="progress-track">
-                            <div class="progress-fill" id="confidenceBar" style="width: 99.8%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Dataset Classification Card -->
-                    <div class="telemetry-card">
-                        <div class="t-card-header">
-                            <span class="t-card-title">Target Classification</span>
-                            <span class="t-badge neutral">PHI-USIIL</span>
-                        </div>
-                        <div class="kpi-big-num" id="classLabelNum">Legitimate (1)</div>
-                        <div class="kpi-sub" id="classLabelSub">Matched Class 1 (Benign Verified)</div>
-                        <div class="t-footer-actions">
-                            <button class="json-btn" onclick="exportJsonReport()">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="7 10 12 15 17 10"/>
-                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                    <!-- Circular Gauge & Score Cards -->
+                    <div class="telemetry-deck">
+                        <div class="telemetry-card gauge-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Threat Risk Probability</span>
+                                <span class="t-badge" id="riskLevelBadge">LOW RISK</span>
+                            </div>
+                            <div class="circular-gauge-box">
+                                <svg class="gauge-svg" viewBox="0 0 120 120">
+                                    <circle class="gauge-bg-circle" cx="60" cy="60" r="48" stroke-width="10"/>
+                                    <circle class="gauge-fill-circle" id="gaugeCircle" cx="60" cy="60" r="48" stroke-width="10" stroke-dasharray="301.6" stroke-dashoffset="301.6"/>
                                 </svg>
-                                <span>Export JSON Report</span>
-                            </button>
+                                <div class="gauge-number-overlay">
+                                    <span class="gauge-score" id="gaugeScoreNum">0.0</span>
+                                    <span class="gauge-percent">%</span>
+                                </div>
+                            </div>
+                            <div class="gauge-caption" id="gaugeCaption">Safe browsing profile detected</div>
+                        </div>
+
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Model Confidence</span>
+                                <span class="t-badge neutral">STATISTICAL</span>
+                            </div>
+                            <div class="kpi-big-num accent-cyan" id="confidenceNum">99.8%</div>
+                            <div class="kpi-sub">Calculated certainty across 100 ensemble decision trees</div>
+                            <div class="progress-track">
+                                <div class="progress-fill" id="confidenceBar" style="width: 99.8%"></div>
+                            </div>
+                        </div>
+
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Target Classification</span>
+                                <span class="t-badge neutral">PHI-USIIL</span>
+                            </div>
+                            <div class="kpi-big-num" id="classLabelNum">Legitimate (1)</div>
+                            <div class="kpi-sub" id="classLabelSub">Matched Class 1 (Benign Verified)</div>
+                            <div class="t-footer-actions">
+                                <button class="json-btn" onclick="exportJsonReport()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    <span>Export JSON Report</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 17 Lexical Features Inspection Grid -->
-            <div class="features-deck">
+                <!-- 17 Lexical Features Inspection Grid -->
+                <div class="features-deck">
+                    <div class="deck-header">
+                        <div>
+                            <div class="deck-kicker">FEATURE EXTRACTION BREAKDOWN</div>
+                            <h3 class="deck-title">17 Lexical Security Vectors Analyzed</h3>
+                        </div>
+                        <div class="deck-filter-pills">
+                            <span class="pill-stat">17 Total Features</span>
+                            <span class="pill-stat safe-pill">ML Weights Optimized</span>
+                        </div>
+                    </div>
+
+                    <div class="features-category-grid">
+                        <div class="category-card">
+                            <div class="cat-header">
+                                <div class="cat-icon-wrap cyan">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <path d="M9 3v18"/>
+                                    </svg>
+                                </div>
+                                <span class="cat-name">Domain & Host Structure</span>
+                            </div>
+                            <div class="feature-rows" id="catDomainRows"></div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="cat-header">
+                                <div class="cat-icon-wrap emerald">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 7V4h16v3"/>
+                                        <path d="M9 20h6"/>
+                                        <path d="M12 4v16"/>
+                                    </svg>
+                                </div>
+                                <span class="cat-name">Lexical & Character Metrics</span>
+                            </div>
+                            <div class="feature-rows" id="catLexicalRows"></div>
+                        </div>
+
+                        <div class="category-card">
+                            <div class="cat-header">
+                                <div class="cat-icon-wrap purple">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    </svg>
+                                </div>
+                                <span class="cat-name">Obfuscation & Protocol</span>
+                            </div>
+                            <div class="feature-rows" id="catObfRows"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Scan History -->
+            <section class="recent-scans-deck">
                 <div class="deck-header">
                     <div>
-                        <div class="deck-kicker">FEATURE EXTRACTION BREAKDOWN</div>
-                        <h3 class="deck-title">17 Lexical Security Vectors Analyzed</h3>
+                        <div class="deck-kicker">SESSION LOG</div>
+                        <h3 class="deck-title">Recent Target Inspections</h3>
                     </div>
-                    <div class="deck-filter-pills">
-                        <span class="pill-stat">17 Total Features</span>
-                        <span class="pill-stat safe-pill">ML Weights Optimized</span>
+                    <button class="clear-history-btn" onclick="clearScanHistory()">Clear History</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="empty-history">No URLs scanned during this session yet. Run a scan above to start logging.</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: EMAIL & SMS PHISHING ANALYZER                           -->
+        <!-- ============================================================== -->
+        <div id="panelEmailAnalyzer" class="suite-panel hidden">
+            <section class="tool-console">
+                <div class="console-box">
+                    <div class="tool-box-header">
+                        <div class="tool-title-group">
+                            <h3 class="tool-title">Email & SMS Social Engineering Inspector</h3>
+                            <p class="tool-sub">Analyzes psychological urgency, fear, credential coercion, and scans all embedded target URLs.</p>
+                        </div>
+                    </div>
+
+                    <!-- Preset Samples for Viva / Quick Testing -->
+                    <div class="preset-strip" style="margin-top: 0; margin-bottom: 16px;">
+                        <span class="preset-label">Test Samples:</span>
+                        <div class="chips-container">
+                            <button type="button" class="demo-chip danger" onclick="loadEmailSample('kyc_scam')">
+                                <span class="demo-dot threat"></span>
+                                <span>SBI KYC Urgency Scam</span>
+                                <span class="tag-mini threat">Phish</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="loadEmailSample('lottery_crypto')">
+                                <span class="demo-dot threat"></span>
+                                <span>Crypto Lottery Prize Bait</span>
+                                <span class="tag-mini threat">Fraud</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="loadEmailSample('password_reset')">
+                                <span class="demo-dot threat"></span>
+                                <span>IT Support Password Reset</span>
+                                <span class="tag-mini threat">Lure</span>
+                            </button>
+                            <button type="button" class="demo-chip legit" onclick="loadEmailSample('clean_invite')">
+                                <span class="demo-dot safe"></span>
+                                <span>Clean Team Project Invite</span>
+                                <span class="tag-mini">Benign</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Text Input Box -->
+                    <div class="textarea-hub">
+                        <textarea 
+                            id="emailTextInput" 
+                            class="console-textarea" 
+                            rows="6" 
+                            placeholder="Paste raw email body, WhatsApp message, or SMS text here to inspect..."
+                        ></textarea>
+                        <div class="textarea-footer">
+                            <button type="button" class="tool-btn" title="Clear message" onclick="document.getElementById('emailTextInput').value=''">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                                <span>Clear</span>
+                            </button>
+                            <button type="button" id="btnAnalyzeMessage" class="cta-scan-btn" onclick="analyzeEmailMessage()">
+                                <span>ANALYZE MESSAGE THREAT</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Analysis Result Section -->
+            <section id="emailResultSection" class="report-zone hidden">
+                <div class="verdict-banner" id="emailVerdictBanner">
+                    <div class="verdict-main">
+                        <div class="verdict-icon-hull" id="emailIconHull"></div>
+                        <div class="verdict-details">
+                            <div class="status-kicker" id="emailStatusKicker">SOCIAL ENGINEERING VERDICT</div>
+                            <h2 class="verdict-heading" id="emailVerdictHeading">ANALYSIS RESULT</h2>
+                            <p class="verdict-narrative" id="emailNarrative">-</p>
+                        </div>
+                    </div>
+
+                    <div class="telemetry-deck">
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Combined Threat Score</span>
+                                <span class="t-badge" id="emailThreatBadge">EVALUATING</span>
+                            </div>
+                            <div class="kpi-big-num" id="emailOverallScore">0.0%</div>
+                            <div class="kpi-sub">Weighted blend of linguistic social engineering and embedded link risk</div>
+                        </div>
+
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Social Engineering Coercion</span>
+                                <span class="t-badge neutral">HEURISTIC</span>
+                            </div>
+                            <div class="kpi-big-num accent-cyan" id="emailSeScore">0.0%</div>
+                            <div class="kpi-sub" id="emailSeTriggersCount">0 psychological triggers detected</div>
+                        </div>
+
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Embedded Links Scan</span>
+                                <span class="t-badge neutral">17-FEATURE ML</span>
+                            </div>
+                            <div class="kpi-big-num" id="emailLinksStats">0 Links</div>
+                            <div class="kpi-sub" id="emailMaliciousLinksSub">0 flagged as malicious</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="features-category-grid">
-                    <!-- Category 1: Structural & Length Metrics -->
-                    <div class="category-card">
-                        <div class="cat-header">
-                            <div class="cat-icon-wrap cyan">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                    <path d="M9 3v18"/>
-                                </svg>
-                            </div>
-                            <span class="cat-name">Domain & Host Structure</span>
-                        </div>
-                        <div class="feature-rows" id="catDomainRows">
-                            <!-- Filled dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Category 2: Character Distributions -->
-                    <div class="category-card">
-                        <div class="cat-header">
-                            <div class="cat-icon-wrap emerald">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M4 7V4h16v3"/>
-                                    <path d="M9 20h6"/>
-                                    <path d="M12 4v16"/>
-                                </svg>
-                            </div>
-                            <span class="cat-name">Lexical & Character Metrics</span>
-                        </div>
-                        <div class="feature-rows" id="catLexicalRows">
-                            <!-- Filled dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Category 3: Obfuscation & Security Tokens -->
+                <!-- Detected Triggers & Embedded Links Cards -->
+                <div class="features-category-grid" style="grid-template-columns: 1fr 1fr; margin-top: 24px;">
+                    <!-- Detected Psychological Triggers -->
                     <div class="category-card">
                         <div class="cat-header">
                             <div class="cat-icon-wrap purple">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
                                 </svg>
                             </div>
-                            <span class="cat-name">Obfuscation & Protocol</span>
+                            <span class="cat-name">Detected Social Engineering Triggers</span>
                         </div>
-                        <div class="feature-rows" id="catObfRows">
+                        <div id="emailTriggersList" class="feature-rows">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Extracted Embedded Links -->
+                    <div class="category-card">
+                        <div class="cat-header">
+                            <div class="cat-icon-wrap cyan">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                </svg>
+                            </div>
+                            <span class="cat-name">Scanned Embedded URLs</span>
+                        </div>
+                        <div id="emailLinksList" class="feature-rows">
                             <!-- Filled dynamically -->
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
-        <!-- Recent Scan History -->
-        <section class="recent-scans-deck">
-            <div class="deck-header">
-                <div>
-                    <div class="deck-kicker">SESSION LOG</div>
-                    <h3 class="deck-title">Recent Target Inspections</h3>
+        <!-- ============================================================== -->
+        <!-- TAB 3: LIVE SSL / DNS SECURITY INSPECTOR                       -->
+        <!-- ============================================================== -->
+        <div id="panelSslDnsInspector" class="suite-panel hidden">
+            <section class="tool-console">
+                <div class="console-box">
+                    <div class="tool-box-header">
+                        <div class="tool-title-group">
+                            <h3 class="tool-title">Live Cryptographic SSL/TLS & DNS Inspector</h3>
+                            <p class="tool-sub">Performs live network socket DNS resolution and real TLS handshakes to inspect X.509 certificates and cipher suites.</p>
+                        </div>
+                    </div>
+
+                    <!-- Preset Samples for Quick Testing -->
+                    <div class="preset-strip" style="margin-top: 0; margin-bottom: 16px;">
+                        <span class="preset-label">Test Targets:</span>
+                        <div class="chips-container">
+                            <button type="button" class="demo-chip legit" onclick="loadSslSample('https://google.com')">
+                                <span class="demo-dot safe"></span>
+                                <span>google.com</span>
+                                <span class="tag-mini">Grade A+</span>
+                            </button>
+                            <button type="button" class="demo-chip legit" onclick="loadSslSample('https://github.com')">
+                                <span class="demo-dot safe"></span>
+                                <span>github.com</span>
+                                <span class="tag-mini">TLS 1.3</span>
+                            </button>
+                            <button type="button" class="demo-chip legit" onclick="loadSslSample('https://www.uni-mainz.de')">
+                                <span class="demo-dot safe"></span>
+                                <span>uni-mainz.de</span>
+                                <span class="tag-mini">DigiCert</span>
+                            </button>
+                            <button type="button" class="demo-chip danger" onclick="loadSslSample('http://www.teramill.com')">
+                                <span class="demo-dot threat"></span>
+                                <span>teramill.com</span>
+                                <span class="tag-mini threat">No SSL</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); inspectSslDns();">
+                        <div class="input-hub">
+                            <div class="protocol-badge">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <span class="protocol-text">DOMAIN / HOST</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="sslTargetInput" 
+                                class="console-input" 
+                                placeholder="Enter domain or URL to inspect (e.g., google.com, paypal.com)..." 
+                                autocomplete="off"
+                                spellcheck="false"
+                                required
+                            />
+                            <button type="submit" id="btnInspectSsl" class="cta-scan-btn">
+                                <span>INSPECT TLS & DNS</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <button class="clear-history-btn" onclick="clearScanHistory()">Clear History</button>
-            </div>
-            <div class="history-list" id="historyList">
-                <div class="empty-history">No URLs scanned during this session yet. Run a scan above to start logging.</div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Model Telemetry & Empirical Performance -->
+            <!-- SSL / DNS Results Deck -->
+            <section id="sslResultSection" class="report-zone hidden">
+                <div class="verdict-banner" id="sslVerdictBanner">
+                    <div class="verdict-main">
+                        <div class="grade-hull" id="sslGradeHull">A+</div>
+                        <div class="verdict-details">
+                            <div class="status-kicker" id="sslKicker">CNS CRYPTOGRAPHIC PROFILE</div>
+                            <h2 class="verdict-heading" id="sslHeading">CRYPTOGRAPHIC GRADE: A+</h2>
+                            <p class="verdict-narrative" id="sslNarrative">Active modern TLS 1.3 handshake negotiated with verified Certificate Authority.</p>
+                            <div class="inspected-target">
+                                <span class="target-tag">HOST</span>
+                                <span class="target-val" id="sslTargetHostVal">google.com</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="features-category-grid" style="grid-template-columns: 1fr 1fr; margin-top: 10px;">
+                        <!-- Certificate Details -->
+                        <div class="category-card">
+                            <div class="cat-header">
+                                <div class="cat-icon-wrap emerald">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </div>
+                                <span class="cat-name">X.509 Certificate & TLS Details</span>
+                            </div>
+                            <div id="sslCertRows" class="feature-rows"></div>
+                        </div>
+
+                        <!-- DNS & IP Intelligence -->
+                        <div class="category-card">
+                            <div class="cat-header">
+                                <div class="cat-icon-wrap cyan">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="2" y1="12" x2="22" y2="12"/>
+                                    </svg>
+                                </div>
+                                <span class="cat-name">DNS Resolution & Network Routing</span>
+                            </div>
+                            <div id="sslDnsRows" class="feature-rows"></div>
+                        </div>
+                    </div>
+
+                    <!-- Security Flags Card -->
+                    <div id="sslFlagsBox" class="console-box" style="margin-top: 20px; background: rgba(8, 12, 22, 0.7);">
+                        <div class="cat-name" style="margin-bottom: 10px; color: var(--neon-cyan);">CNS Security Observations & Flags:</div>
+                        <div id="sslFlagsList" class="feature-rows"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 4: QUISHING (QR CODE) DETECTOR                             -->
+        <!-- ============================================================== -->
+        <div id="panelQrScanner" class="suite-panel hidden">
+            <section class="tool-console">
+                <div class="console-box">
+                    <div class="tool-box-header">
+                        <div class="tool-title-group">
+                            <h3 class="tool-title">Quishing (QR Code Phishing) Detector</h3>
+                            <p class="tool-sub">Computer-vision driven QR code decoding using OpenCV with instant 17-feature Random Forest threat evaluation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Drag & Drop Upload Zone -->
+                    <div class="qr-dropzone" id="qrDropZone" onclick="document.getElementById('qrFileInput').click();">
+                        <input type="file" id="qrFileInput" accept="image/*" class="hidden" onchange="onQrFileSelected(event)">
+                        <div class="qr-drop-content">
+                            <div class="qr-icon-hull">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                            </div>
+                            <div class="qr-drop-title">Drop QR code image here or <span class="accent-link">Browse files</span></div>
+                            <div class="qr-drop-sub">Supports PNG, JPG, JPEG, WebP screenshots or photos</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Image Preview (when selected) -->
+                    <div id="qrPreviewWrap" class="qr-preview-container hidden">
+                        <img id="qrPreviewImg" class="qr-thumb" alt="QR Preview">
+                        <div class="qr-preview-meta">
+                            <span id="qrFileName" class="qr-name">qr-code.png</span>
+                            <button type="button" class="cta-scan-btn" onclick="executeQrScan()">
+                                <span>ANALYZE QUISHING LINK</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quishing Result Section -->
+            <section id="qrResultSection" class="report-zone hidden">
+                <div class="verdict-banner" id="qrVerdictBanner">
+                    <div class="verdict-main">
+                        <div class="verdict-icon-hull" id="qrIconHull"></div>
+                        <div class="verdict-details">
+                            <div class="status-kicker" id="qrKicker">QUISHING DECODED RESULT</div>
+                            <h2 class="verdict-heading" id="qrHeading">QR CODE ANALYZED</h2>
+                            <p class="verdict-narrative" id="qrNarrative">-</p>
+                            <div class="inspected-target">
+                                <span class="target-tag">DECODED URL</span>
+                                <span class="target-val" id="qrDecodedPayload">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="telemetry-deck">
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Phishing Risk Score</span>
+                                <span class="t-badge" id="qrRiskBadge">LOW RISK</span>
+                            </div>
+                            <div class="kpi-big-num" id="qrRiskScore">0.0%</div>
+                            <div class="kpi-sub">Calculated via Random Forest model on decoded link</div>
+                        </div>
+
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">Classification</span>
+                                <span class="t-badge neutral">VERDICT</span>
+                            </div>
+                            <div class="kpi-big-num accent-cyan" id="qrClassLabel">-</div>
+                            <div class="kpi-sub">Ensemble decision probability assessment</div>
+                        </div>
+
+                        <div class="telemetry-card">
+                            <div class="t-card-header">
+                                <span class="t-card-title">SSL / TLS State</span>
+                                <span class="t-badge neutral">CRYPTOGRAPHIC</span>
+                            </div>
+                            <div class="kpi-big-num" id="qrSslGrade">-</div>
+                            <div class="kpi-sub" id="qrSslIssuer">Live certificate security inspection</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- COMMON SECTION: MODEL TELEMETRY & CONFUSION MATRIX             -->
+        <!-- ============================================================== -->
         <section class="telemetry-section" id="modelTelemetrySection">
             <div class="deck-header text-center">
                 <div>
@@ -455,7 +854,7 @@
         <section class="workflow-section">
             <div class="deck-header text-center">
                 <div class="deck-kicker">PIPELINE ARCHITECTURE</div>
-                <h3 class="deck-title">How The Detection Pipeline Operates</h3>
+                <h3 class="deck-title">Multi-Vector Phishing Defense Pipeline</h3>
             </div>
 
             <div class="workflow-steps">
@@ -468,8 +867,8 @@
                             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                         </svg>
                     </div>
-                    <h4 class="wf-title">URL Parsing</h4>
-                    <p class="wf-desc">Target URL is sanitized, normalized into canonical FQDN syntax, and segmented into protocol, domain, and path tokens.</p>
+                    <h4 class="wf-title">Multi-Modal Inputs</h4>
+                    <p class="wf-desc">Ingests target URLs, raw Email/SMS text bodies, or Quishing QR images.</p>
                 </div>
 
                 <div class="workflow-arrow">→</div>
@@ -484,8 +883,8 @@
                             <line x1="15" y1="1" x2="15" y2="4"/>
                         </svg>
                     </div>
-                    <h4 class="wf-title">17 Feature Extraction</h4>
-                    <p class="wf-desc">Instant real-time extraction of structural lengths, obfuscation delimiters (@, %, //), digit/letter ratios, and TLS state.</p>
+                    <h4 class="wf-title">Feature & Vision Engine</h4>
+                    <p class="wf-desc">Extracts 17 lexical attributes, parses NLP urgency lures, or decodes QR matrix with OpenCV.</p>
                 </div>
 
                 <div class="workflow-arrow">→</div>
@@ -500,7 +899,7 @@
                         </svg>
                     </div>
                     <h4 class="wf-title">Random Forest Inference</h4>
-                    <p class="wf-desc">Evaluated by 100 decision trees trained on the 235k-record PhiUSIIL benchmark, aggregating votes into class probabilities.</p>
+                    <p class="wf-desc">100 ensemble trees trained on 235k samples evaluate threat probability in parallel.</p>
                 </div>
 
                 <div class="workflow-arrow">→</div>
@@ -513,8 +912,8 @@
                             <path d="m9 12 2 2 4-4"/>
                         </svg>
                     </div>
-                    <h4 class="wf-title">Threat Verdict & Score</h4>
-                    <p class="wf-desc">Generates calibrated 0-100% Risk Score, binary verdict, confidence index, and human-interpretable security flags.</p>
+                    <h4 class="wf-title">Live Cryptographic Grade</h4>
+                    <p class="wf-desc">Performs real TLS handshake, parses X.509 cert, assigns CNS Grade A+ to F, and generates defense report.</p>
                 </div>
             </div>
         </section>
@@ -529,9 +928,9 @@
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         <path d="m9 12 2 2 4-4"/>
                     </svg>
-                    <span>PhishGuard AI</span>
+                    <span>PhishGuard AI Defense Suite</span>
                 </div>
-                <p class="f-desc">Applied Cryptography & Network Security (CNS) Design Challenge. Proactive lexical machine learning defense.</p>
+                <p class="f-desc">Applied Cryptography & Network Security (CNS) Design Challenge. URL, Social Engineering, TLS, & Quishing Prevention.</p>
             </div>
             <div class="f-credits">
                 <span class="f-pill">Dataset: UCI PhiUSIIL (235,795 URLs)</span>
