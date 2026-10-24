@@ -9,11 +9,16 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CURRENT_DIR)
 
 from feature_extraction import extract_features, FEATURE_COLUMNS
+from email_analyzer import analyze_message_full
+from ssl_dns_inspector import inspect_live_security
+from qr_scanner import analyze_quishing_full
+
 # Import rf_engine so pickle can deserialize PureRandomForestClassifier if used
 try:
     from rf_engine import PureRandomForestClassifier, PureDecisionTreeClassifier, PureDecisionNode
 except ImportError:
     pass
+
 
 # Paths
 FRONTEND_DIR = os.path.join(CURRENT_DIR, "..", "frontend")
@@ -24,32 +29,62 @@ app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 
 # Load trained model
 model = None
-if os.path.exists(MODEL_PATH):
-    try:
-        with open(MODEL_PATH, "rb") as f:
-            model = pickle.load(f)
-        print(f"[OK] Trained model loaded successfully from {MODEL_PATH}")
-    except Exception as e:
-        print(f"[Warning] Failed to load model: {e}")
-else:
-    print(f"[Warning] model.pkl not found at {MODEL_PATH}. Please run train_model.py first.")
-
-# Load model metrics
 metrics_data = {}
-if os.path.exists(METRICS_PATH):
-    try:
-        with open(METRICS_PATH, "r", encoding="utf-8") as f:
-            metrics_data = json.load(f)
-    except Exception as e:
-        print(f"[Warning] Failed to load metrics: {e}")
+
+def load_or_train_model():
+    global model, metrics_data
+    if os.path.exists(MODEL_PATH):
+        try:
+            with open(MODEL_PATH, "rb") as f:
+                model = pickle.load(f)
+            print(f"[OK] Trained model loaded successfully from {MODEL_PATH}")
+        except Exception as e:
+            print(f"[Warning] Failed to load model ({e}). Auto-retraining...")
+            model = None
+
+    if model is None:
+        try:
+            import subprocess
+            train_script = os.path.join(CURRENT_DIR, "train_model.py")
+            subprocess.run([sys.executable, train_script], check=True)
+            with open(MODEL_PATH, "rb") as f:
+                model = pickle.load(f)
+            print("[OK] Trained model loaded after auto-retraining.")
+        except Exception as e:
+            print(f"[Error] Auto-training failed: {e}")
+
+    if os.path.exists(METRICS_PATH):
+        try:
+            with open(METRICS_PATH, "r", encoding="utf-8") as f:
+                metrics_data = json.load(f)
+        except Exception as e:
+            print(f"[Warning] Failed to load metrics: {e}")
+
+load_or_train_model()
 
 
 def normalize_url(url: str) -> str:
-    """Normalize input URL to include scheme if omitted."""
+    """Normalize input URL to standard canonical form matching dataset conventions."""
     url = url.strip()
     if not (url.startswith("http://") or url.startswith("https://")):
-        return f"https://{url}"
+        url = f"https://{url}"
+
+    from urllib.parse import urlparse
+    import ipaddress
+    parsed = urlparse(url)
+    host = parsed.netloc.split(":")[0]
+
+    host_parts = host.split(".")
+    # If apex domain (e.g. google.com instead of www.google.com), add www. prefix to align with benchmark schema
+    if len(host_parts) == 2:
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            new_netloc = f"www.{parsed.netloc}"
+            url = url.replace(f"://{parsed.netloc}", f"://{new_netloc}", 1)
+
     return url
+
 
 
 @app.route("/")
@@ -83,6 +118,10 @@ def predict():
     Validates URL, extracts lexical features, runs model prediction,
     calculates risk score and returns detailed analysis.
     """
+    global model
+    if model is None:
+        load_or_train_model()
+
     if model is None:
         return jsonify({
             "success": False,
@@ -163,6 +202,62 @@ def predict():
             "success": False,
             "error": f"Failed to analyze URL: {str(e)}"
         }), 500
+
+
+@app.route("/api/analyze-message", methods=["POST"])
+def api_analyze_message():
+    """
+    Accepts JSON: {"text": "..."}
+    Analyzes message for psychological social engineering lures and evaluates embedded links.
+    """
+    if model is None:
+        return jsonify({"success": False, "error": "ML model is not loaded on server."}), 503
+
+    data = request.get_json(silent=True) or {}
+    text = data.get("text", "").strip()
+    if not text:
+        return jsonify({"success": False, "error": "Message body cannot be empty."}), 400
+
+    result = analyze_message_full(text, model, normalize_url)
+    return jsonify(result)
+
+
+@app.route("/api/inspect-ssl-dns", methods=["POST"])
+def api_inspect_ssl_dns():
+    """
+    Accepts JSON: {"url": "..."}
+    Performs real-time DNS resolution and live cryptographic SSL/TLS certificate inspection.
+    """
+    data = request.get_json(silent=True) or {}
+    target = data.get("url", "").strip()
+    if not target:
+        return jsonify({"success": False, "error": "Target URL or domain cannot be empty."}), 400
+
+    result = inspect_live_security(target)
+    return jsonify(result)
+
+
+@app.route("/api/scan-qr", methods=["POST"])
+def api_scan_qr():
+    """
+    Accepts multipart/form-data with file 'qr_image' or raw image binary body.
+    Decodes QR code and runs full Random Forest + SSL threat analysis on target payload.
+    """
+    if model is None:
+        return jsonify({"success": False, "error": "ML model is not loaded on server."}), 503
+
+    image_bytes = None
+    if "qr_image" in request.files:
+        file = request.files["qr_image"]
+        image_bytes = file.read()
+    elif request.data:
+        image_bytes = request.data
+
+    if not image_bytes:
+        return jsonify({"success": False, "error": "Please provide an image file containing a QR code."}), 400
+
+    result = analyze_quishing_full(image_bytes, model, normalize_url)
+    return jsonify(result)
 
 
 if __name__ == "__main__":
