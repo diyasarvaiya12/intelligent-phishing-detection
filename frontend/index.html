@@ -332,15 +332,88 @@
                             <div class="kpi-big-num" id="classLabelNum">Legitimate (1)</div>
                             <div class="kpi-sub" id="classLabelSub">Matched Class 1 (Benign Verified)</div>
                             <div class="t-footer-actions">
-                                <button class="json-btn" onclick="exportJsonReport()">
+                                <button class="json-btn" onclick="exportJsonReport()" title="Export JSON raw report">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                         <polyline points="7 10 12 15 17 10"/>
                                         <line x1="12" y1="15" x2="12" y2="3"/>
                                     </svg>
-                                    <span>Export JSON Report</span>
+                                    <span>JSON Export</span>
+                                </button>
+                                <button class="json-btn cta-cert-btn" onclick="openAuditCertificateModal()" title="Generate Official Forensic Cyber Threat Incident Audit Certificate">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                    <span>Forensic Audit Cert</span>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live IP Geolocation & ASN Threat Intelligence Deck -->
+                <div class="geo-threat-deck" id="geoThreatDeck">
+                    <div class="deck-header">
+                        <div>
+                            <div class="deck-kicker">NETWORK TELEMETRY & GEO-INTELLIGENCE</div>
+                            <h3 class="deck-title">Live Host IP, BGP ASN & Infrastructure Radar</h3>
+                        </div>
+                        <div class="deck-filter-pills">
+                            <span class="pill-stat" id="geoCountryBadge">🌍 Resolving Host</span>
+                            <span class="pill-stat safe-pill" id="geoReputationBadge">Threat Intel Active</span>
+                        </div>
+                    </div>
+
+                    <div class="geo-quad-grid">
+                        <!-- 1. Country & Location -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">Geographical Location</span>
+                                <span class="geo-flag" id="geoFlagEmoji">🌐</span>
+                            </div>
+                            <div class="geo-val-big" id="geoCountryText">Resolving...</div>
+                            <div class="geo-sub-text" id="geoCityRegion">City, Region • Timezone</div>
+                        </div>
+
+                        <!-- 2. Primary IP & Reverse DNS -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">Primary IP & PTR Record</span>
+                                <span class="t-badge neutral">DNS A-RECORD</span>
+                            </div>
+                            <div class="geo-val-big font-mono" id="geoIpAddress">0.0.0.0</div>
+                            <div class="geo-sub-text font-mono text-truncate" id="geoReverseDns">Reverse PTR: Resolving...</div>
+                        </div>
+
+                        <!-- 3. Autonomous System (ASN) & ISP -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">BGP ASN & Infrastructure</span>
+                                <span class="t-badge neutral">BGP REGISTRY</span>
+                            </div>
+                            <div class="geo-val-big" id="geoAsnText">AS-UNKNOWN</div>
+                            <div class="geo-sub-text" id="geoIspOrg">Host Organization / ISP</div>
+                        </div>
+
+                        <!-- 4. Network Threat Rating -->
+                        <div class="geo-card">
+                            <div class="geo-card-header">
+                                <span class="geo-card-title">Infrastructure Threat Score</span>
+                                <span class="t-badge" id="geoRiskPill">EVALUATING</span>
+                            </div>
+                            <div class="geo-val-big" id="geoThreatScore">0.0%</div>
+                            <div class="geo-sub-text" id="geoReputationDesc">Network risk assessment</div>
+                        </div>
+                    </div>
+
+                    <!-- Security Observations & Indicators -->
+                    <div class="geo-indicators-box" id="geoIndicatorsBox">
+                        <div class="geo-ind-title">Network Infrastructure Security Findings:</div>
+                        <div class="geo-ind-list" id="geoIndicatorsList">
+                            <div class="geo-ind-item">Performing real-time BGP routing and geolocation intelligence analysis...</div>
                         </div>
                     </div>
                 </div>
@@ -996,6 +1069,123 @@
             </div>
         </div>
     </footer>
+
+    <!-- Forensic Cyber Threat Audit Certificate Modal -->
+    <div class="audit-modal-backdrop hidden" id="auditModalBackdrop">
+        <div class="audit-modal-window" id="printableAuditCertificate">
+            <!-- Certificate Header -->
+            <div class="cert-header">
+                <div class="cert-watermark">CONFIDENTIAL // FORENSIC CYBER AUDIT</div>
+                <div class="cert-title-group">
+                    <div class="cert-agency-seal">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="cert-headline">OFFICIAL FORENSIC CYBER THREAT AUDIT CERTIFICATE</h2>
+                        <div class="cert-subline">PHISHGUARD AI THREAT INTELLIGENCE & INCIDENT RESPONSE DIVISION</div>
+                    </div>
+                </div>
+                <div class="cert-id-tag">
+                    <div class="cert-id-lbl">INCIDENT REF NUMBER</div>
+                    <div class="cert-id-val" id="certIncidentId">PHISH-SEC-2026-X89F2A</div>
+                </div>
+            </div>
+
+            <!-- Evidentiary Verification Bar -->
+            <div class="cert-evidence-bar">
+                <div class="ev-item">
+                    <span class="ev-lbl">TARGET EVIDENCE URL:</span>
+                    <span class="ev-val font-mono" id="certTargetUrl">-</span>
+                </div>
+                <div class="ev-item">
+                    <span class="ev-lbl">AUDIT TIMESTAMP (UTC):</span>
+                    <span class="ev-val font-mono" id="certTimestamp">-</span>
+                </div>
+                <div class="ev-item">
+                    <span class="ev-lbl">CRYPTOGRAPHIC SHA-256 INTEGRITY SEAL:</span>
+                    <span class="ev-val font-mono cert-hash" id="certSha256">-</span>
+                </div>
+            </div>
+
+            <!-- Threat Severity Banner -->
+            <div class="cert-severity-banner" id="certSeverityBanner">
+                <div class="cert-verdict-title" id="certVerdictTitle">VERDICT: POTENTIAL PHISHING (CRITICAL SEV-1)</div>
+                <div class="cert-verdict-meta">
+                    <span>Threat Probability: <strong id="certRiskScore">100.0%</strong></span> •
+                    <span>Model Confidence: <strong id="certConfidence">99.8%</strong></span> •
+                    <span>Ensemble Architecture: <strong>100 Decision Trees (235k PhiUSIIL)</strong></span>
+                </div>
+            </div>
+
+            <!-- Telemetry Breakdown Grid -->
+            <div class="cert-dual-grid">
+                <!-- Left: Lexical Indicators -->
+                <div class="cert-section-box">
+                    <h4 class="cert-sec-title">1. LEXICAL HEURISTIC MATRIX (17 VECTORS)</h4>
+                    <table class="cert-table" id="certLexicalTable">
+                        <!-- Dynamic rows -->
+                    </table>
+                </div>
+
+                <!-- Right: Network & TLS Telemetry -->
+                <div class="cert-section-box">
+                    <h4 class="cert-sec-title">2. INFRASTRUCTURE & CRYPTOGRAPHIC TELEMETRY</h4>
+                    <div class="cert-net-rows" id="certNetworkDetails">
+                        <!-- Dynamic details -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOC Incident Response Recommendations -->
+            <div class="cert-mitigation-box">
+                <h4 class="cert-sec-title">3. ACTIONABLE SOC MITIGATION & CONTAINMENT DIRECTIVES</h4>
+                <ul class="cert-directives-list" id="certDirectivesList">
+                    <!-- Dynamic directives -->
+                </ul>
+            </div>
+
+            <!-- Certificate Sign-off Block -->
+            <div class="cert-signoff-block">
+                <div class="sign-item">
+                    <div class="sign-lbl">EVALUATION SYSTEM</div>
+                    <div class="sign-val">PhishGuard Autonomous Core v2.4</div>
+                </div>
+                <div class="sign-item">
+                    <div class="sign-lbl">DATASET BENCHMARK</div>
+                    <div class="sign-val">UCI PhiUSIIL (235,795 Samples • Elsevier 2024)</div>
+                </div>
+                <div class="sign-item">
+                    <div class="sign-lbl">FORENSIC STATUS</div>
+                    <div class="sign-stamp" id="certStamp">CRYPTOGRAPHICALLY SEALED</div>
+                </div>
+            </div>
+
+            <!-- Modal Controls (hidden during print) -->
+            <div class="cert-modal-actions no-print">
+                <button type="button" class="cta-scan-btn" onclick="window.print()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"/>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                        <rect x="6" y="14" width="12" height="8"/>
+                    </svg>
+                    <span>Print / Save as PDF Certificate</span>
+                </button>
+                <button type="button" class="nav-ghost-btn" onclick="copyCertificateDigest()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    <span>Copy Summary</span>
+                </button>
+                <button type="button" class="nav-ghost-btn" onclick="closeAuditCertificateModal()">
+                    <span>✕ Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

@@ -357,6 +357,11 @@ function renderThreatReport(data) {
 
     renderCategorizedFeatures(data.features || {});
 
+    // Render live IP Geolocation & ASN Threat Intel
+    if (data.ip_intel) {
+        renderIpThreatIntel(data.ip_intel);
+    }
+
     reportZone.classList.remove('hidden');
     reportZone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -969,4 +974,177 @@ function renderQrReport(data) {
 
     reportZone.classList.remove('hidden');
     reportZone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+// -------------------------------------------------------------
+// Live IP Geolocation & ASN Threat Intelligence Controller
+// -------------------------------------------------------------
+function renderIpThreatIntel(intel) {
+    if (!intel || !intel.success) return;
+
+    const deck = document.getElementById('geoThreatDeck');
+    if (deck) deck.style.display = 'block';
+
+    const flagEmoji = document.getElementById('geoFlagEmoji');
+    const countryText = document.getElementById('geoCountryText');
+    const cityRegion = document.getElementById('geoCityRegion');
+    const ipAddress = document.getElementById('geoIpAddress');
+    const reverseDns = document.getElementById('geoReverseDns');
+    const asnText = document.getElementById('geoAsnText');
+    const ispOrg = document.getElementById('geoIspOrg');
+    const threatScore = document.getElementById('geoThreatScore');
+    const reputationDesc = document.getElementById('geoReputationDesc');
+    const countryBadge = document.getElementById('geoCountryBadge');
+    const repBadge = document.getElementById('geoReputationBadge');
+    const riskPill = document.getElementById('geoRiskPill');
+    const indList = document.getElementById('geoIndicatorsList');
+
+    if (flagEmoji) flagEmoji.textContent = intel.flag_emoji || '🌐';
+    if (countryText) countryText.textContent = `${intel.country || 'Unknown'} (${intel.country_code || 'XX'})`;
+    if (cityRegion) cityRegion.textContent = `${intel.city || 'City'}, ${intel.region || 'Region'} • ${intel.timezone || 'UTC'}`;
+    if (ipAddress) ipAddress.textContent = intel.primary_ip || '0.0.0.0';
+    if (reverseDns) reverseDns.textContent = `PTR: ${intel.reverse_dns || 'None'}`;
+    if (asnText) asnText.textContent = intel.asn || 'AS-UNASSIGNED';
+    if (ispOrg) ispOrg.textContent = `${intel.isp || 'Host ISP'} • ${intel.organization || ''}`;
+    if (threatScore) threatScore.textContent = `${intel.network_threat_score || 0}%`;
+    if (reputationDesc) reputationDesc.textContent = intel.network_reputation || 'Evaluated';
+
+    if (countryBadge) countryBadge.textContent = `${intel.flag_emoji || '🌐'} ${intel.country || 'Global'}`;
+    if (repBadge) repBadge.textContent = intel.network_reputation || 'Active';
+
+    if (riskPill) {
+        if (intel.network_threat_score >= 60) {
+            riskPill.className = 't-badge high';
+            riskPill.textContent = 'HIGH RISK INFRA';
+            if (threatScore) threatScore.style.color = 'var(--threat-crimson)';
+        } else {
+            riskPill.className = 't-badge low';
+            riskPill.textContent = 'SECURE NETWORK';
+            if (threatScore) threatScore.style.color = 'var(--safe-emerald)';
+        }
+    }
+
+    if (indList && intel.security_indicators) {
+        indList.innerHTML = '';
+        intel.security_indicators.forEach(ind => {
+            const d = document.createElement('div');
+            d.className = 'geo-ind-item';
+            d.innerHTML = `<span style="color:var(--neon-cyan); margin-right:6px;">✦</span> ${ind}`;
+            indList.appendChild(d);
+        });
+    }
+}
+
+// -------------------------------------------------------------
+// Forensic Cyber Threat Incident Audit Certificate Controller
+// -------------------------------------------------------------
+async function openAuditCertificateModal() {
+    if (!lastAnalysisData) {
+        alert('Please analyze a URL or target domain first to generate its Forensic Audit Certificate.');
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/generate-audit-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(lastAnalysisData)
+        });
+        const report = await res.json();
+        if (!report.success) throw new Error(report.error || 'Failed to generate audit report.');
+
+        // Populate Modal Fields
+        document.getElementById('certIncidentId').textContent = report.incident_id;
+        document.getElementById('certTargetUrl').textContent = report.target_url;
+        document.getElementById('certTimestamp').textContent = report.timestamp_readable;
+        document.getElementById('certSha256').textContent = report.sha256_evidence_seal;
+
+        const banner = document.getElementById('certSeverityBanner');
+        const title = document.getElementById('certVerdictTitle');
+        title.textContent = `VERDICT: ${report.verdict} — SEVERITY: ${report.severity}`;
+        title.style.color = report.status_color;
+
+        document.getElementById('certRiskScore').textContent = `${report.risk_score}%`;
+        document.getElementById('certRiskScore').style.color = report.status_color;
+        document.getElementById('certConfidence').textContent = `${report.confidence}%`;
+
+        // Populate Lexical Matrix Table
+        const lexTable = document.getElementById('certLexicalTable');
+        lexTable.innerHTML = '';
+        const feats = report.features || {};
+        const keyFeats = [
+            { k: 'URLLength', name: 'Total URL Length' },
+            { k: 'DomainLength', name: 'Domain Character Count' },
+            { k: 'NoOfSubDomain', name: 'Subdomain Depth Count' },
+            { k: 'IsHTTPS', name: 'Transport Layer Security (HTTPS)' },
+            { k: 'SpacialCharRatioInURL', name: 'Special Character Ratio' },
+            { k: 'HasObfuscation', name: 'Character Obfuscation Hex/Symbol' }
+        ];
+
+        keyFeats.forEach(kf => {
+            const val = feats[kf.k] !== undefined ? feats[kf.k] : 'N/A';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="padding: 6px 10px; font-weight: 600; font-size: 0.8rem; border-bottom: 1px solid var(--border-subtle);">${kf.name}</td>
+                <td style="padding: 6px 10px; font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem; color: var(--neon-cyan); border-bottom: 1px solid var(--border-subtle); text-align: right;">${val}</td>
+            `;
+            lexTable.appendChild(row);
+        });
+
+        // Populate Network & Infrastructure Details
+        const netBox = document.getElementById('certNetworkDetails');
+        netBox.innerHTML = '';
+        const intel = report.ip_intel || {};
+        const netItems = [
+            { lbl: 'Resolved Host IP', val: intel.primary_ip || 'Resolved via Socket' },
+            { lbl: 'BGP Autonomous System', val: intel.asn || 'AS-UNASSIGNED' },
+            { lbl: 'Hosting ISP & Org', val: `${intel.isp || 'Public WAN'} • ${intel.organization || ''}` },
+            { lbl: 'Physical Geolocation', val: `${intel.flag_emoji || '🌐'} ${intel.city || ''}, ${intel.country || 'Global Internet'}` },
+            { lbl: 'Infrastructure Reputation', val: intel.network_reputation || 'Evaluated' }
+        ];
+
+        netItems.forEach(ni => {
+            const d = document.createElement('div');
+            d.style.cssText = 'display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.8rem;';
+            d.innerHTML = `
+                <span style="color: var(--text-muted);">${ni.lbl}:</span>
+                <span style="font-family: var(--font-mono); font-weight: 600; color: var(--text-primary); text-align: right;">${ni.val}</span>
+            `;
+            netBox.appendChild(d);
+        });
+
+        // Populate Mitigation Directives
+        const dirList = document.getElementById('certDirectivesList');
+        dirList.innerHTML = '';
+        (report.mitigation_directives || []).forEach(dir => {
+            const li = document.createElement('li');
+            li.style.cssText = 'margin-bottom: 6px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;';
+            li.textContent = dir;
+            dirList.appendChild(li);
+        });
+
+        const modal = document.getElementById('auditModalBackdrop');
+        if (modal) modal.classList.remove('hidden');
+    } catch (err) {
+        console.error('Audit cert error:', err);
+        alert('Could not generate forensic certificate: ' + err.message);
+    }
+}
+
+function closeAuditCertificateModal() {
+    const modal = document.getElementById('auditModalBackdrop');
+    if (modal) modal.classList.add('hidden');
+}
+
+function copyCertificateDigest() {
+    const incId = document.getElementById('certIncidentId').textContent;
+    const target = document.getElementById('certTargetUrl').textContent;
+    const sha = document.getElementById('certSha256').textContent;
+    const verdict = document.getElementById('certVerdictTitle').textContent;
+    const text = `--- PHISHGUARD FORENSIC AUDIT CERTIFICATE ---\nIncident ID: ${incId}\nTarget URL: ${target}\nSHA-256 Seal: ${sha}\n${verdict}\nAuthority: PhishGuard AI Threat Intelligence Core v2.4`;
+
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Forensic Evidence Digest copied to clipboard!');
+    }).catch(() => {
+        alert('Digest:\n' + text);
+    });
 }

@@ -12,6 +12,8 @@ from feature_extraction import extract_features, FEATURE_COLUMNS
 from email_analyzer import analyze_message_full
 from ssl_dns_inspector import inspect_live_security
 from qr_scanner import analyze_quishing_full
+from ip_threat_intel import inspect_ip_threat_intel
+from audit_report import generate_threat_audit_report
 
 # Import rf_engine so pickle can deserialize PureRandomForestClassifier if used
 try:
@@ -186,6 +188,12 @@ def predict():
             verdict = "legitimate"
             explanation = "URL lexical patterns conform to standard, benign domain conventions."
 
+        # Enrich with live IP Geolocation & ASN Threat Intel
+        try:
+            ip_intel = inspect_ip_threat_intel(url)
+        except Exception:
+            ip_intel = None
+
         return jsonify({
             "success": True,
             "url": url,
@@ -194,7 +202,8 @@ def predict():
             "risk_score": risk_score,
             "confidence": confidence,
             "explanation": explanation,
-            "features": features
+            "features": features,
+            "ip_intel": ip_intel
         })
 
     except Exception as e:
@@ -258,6 +267,35 @@ def api_scan_qr():
 
     result = analyze_quishing_full(image_bytes, model, normalize_url)
     return jsonify(result)
+
+
+@app.route("/api/ip-threat-intel", methods=["POST"])
+def api_ip_threat_intel():
+    """
+    Accepts JSON: {"url": "..."} or {"domain": "..."}
+    Performs real-time IP DNS resolution, BGP ASN lookup, and Geolocation risk analysis.
+    """
+    data = request.get_json(silent=True) or {}
+    target = data.get("url") or data.get("domain") or ""
+    if not target:
+        return jsonify({"success": False, "error": "Target URL or domain cannot be empty."}), 400
+
+    result = inspect_ip_threat_intel(target)
+    return jsonify(result)
+
+
+@app.route("/api/generate-audit-report", methods=["POST"])
+def api_generate_audit_report():
+    """
+    Accepts JSON with scan telemetry.
+    Generates an official cryptographically hashed Cyber Threat Forensic Audit Certificate.
+    """
+    data = request.get_json(silent=True) or {}
+    if not data:
+        return jsonify({"success": False, "error": "No scan data provided for audit certificate."}), 400
+
+    report = generate_threat_audit_report(data)
+    return jsonify(report)
 
 
 if __name__ == "__main__":

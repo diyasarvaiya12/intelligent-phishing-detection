@@ -142,6 +142,33 @@ assert data_qr["verdict"] == "legitimate"
 assert data_qr["risk_score"] < 10.0
 print(f"[PASS] QR Code Quishing Scan  : Payload = '{data_qr['payload']}', Verdict = {data_qr['verdict']} (Risk: {data_qr['risk_score']}%)")
 
+# 9. Test Live IP Geolocation & ASN Threat Intelligence
+print("\n--- Testing Live IP Geolocation & ASN Threat Intelligence ---")
+r_ip = client.post("/api/ip-threat-intel", json={"url": "google.com"})
+assert r_ip.status_code == 200
+data_ip = r_ip.get_json()
+assert data_ip["success"] is True
+assert data_ip["primary_ip"] is not None
+assert "asn" in data_ip
+print(f"[PASS] IP Threat Intel on google.com: IP = {data_ip['primary_ip']}, Country = {data_ip['country']}, Reputation = {data_ip['network_reputation']}")
+
+# 10. Test Forensic Cyber Threat Audit Report Generator
+print("\n--- Testing Forensic Cyber Threat Audit Report Generator ---")
+r_cert = client.post("/api/generate-audit-report", json={
+    "url": "http://secure-login.paypal.account-verify.com/login?id=999&auth=fail",
+    "verdict": "phishing",
+    "risk_score": 100.0,
+    "confidence": 100.0,
+    "features": {"URLLength": 75, "IsHTTPS": 0}
+})
+assert r_cert.status_code == 200
+data_cert = r_cert.get_json()
+assert data_cert["success"] is True
+assert data_cert["incident_id"].startswith("PHISH-SEC-2026-")
+assert len(data_cert["sha256_evidence_seal"]) == 64
+assert len(data_cert["mitigation_directives"]) > 0
+print(f"[PASS] Forensic Audit Certificate: ID = {data_cert['incident_id']}, Severity = {data_cert['severity']}, SHA-256 = {data_cert['sha256_evidence_seal'][:16]}...")
+
 print("\n" + "=" * 70)
-print(" ALL 8 DEFENSE SUITE INTEGRATION TESTS PASSED 100% SUCCESSFULLY! ")
+print(" ALL 10 DEFENSE SUITE INTEGRATION TESTS PASSED 100% SUCCESSFULLY! ")
 print("=" * 70)
