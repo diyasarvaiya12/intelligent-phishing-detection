@@ -1,4 +1,4 @@
-"""
+﻿"""
 PhishGuard AI - Quishing (QR Code Phishing) Detector
 Decodes embedded QR codes from images using OpenCV and evaluates
 the extracted target URL through our Random Forest ML engine.
@@ -20,9 +20,11 @@ def decode_qr_from_bytes(image_bytes: bytes) -> Dict[str, Any]:
         return {"success": False, "error": "No image data received."}
 
     # Convert bytes to numpy image
+    # Convert uploaded image bytes into a NumPy array for OpenCV processing.
     np_arr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
+    # Use Pillow as a fallback when OpenCV cannot decode the uploaded image.
     if img is None:
         # Fallback to Pillow
         try:
@@ -31,16 +33,20 @@ def decode_qr_from_bytes(image_bytes: bytes) -> Dict[str, Any]:
         except Exception as e:
             return {"success": False, "error": f"Invalid image format: {str(e)}"}
 
-    # Initialize OpenCV QR detector
+    # Initialize OpenCV's QR detector to locate and decode the QR code payload.
     detector = cv2.QRCodeDetector()
     decoded_text, points, straight_qrcode = detector.detectAndDecode(img)
 
+    # Improve readability for low-contrast QR codes by applying grayscale
+    # conversion and histogram equalization before attempting another decode.
     if not decoded_text:
         # Try grayscale with histogram equalization if low contrast
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         eq = cv2.equalizeHist(gray)
+
         decoded_text, points, _ = detector.detectAndDecode(eq)
 
+        # Stop processing when neither decoding attempt produces a QR payload.
     if not decoded_text:
         return {
             "success": True,
@@ -48,6 +54,8 @@ def decode_qr_from_bytes(image_bytes: bytes) -> Dict[str, Any]:
             "error": "No QR code detected in the uploaded image. Ensure the QR code is clearly visible."
         }
 
+# Determine whether the decoded payload appears to contain a web address
+# so that only URL-based payloads proceed to phishing analysis.
     decoded_text = decoded_text.strip()
     is_url = bool(
         decoded_text.startswith("http://") or
@@ -63,7 +71,7 @@ def decode_qr_from_bytes(image_bytes: bytes) -> Dict[str, Any]:
         "is_url": is_url
     }
 
-
+# Identify domain-like strings even when the QR payload omits the URL scheme.
 def re_is_url(text: str) -> bool:
     """Check if string appears to be a domain/web address."""
     parsed = urlparse(text if "://" in text else f"https://{text}")
@@ -75,11 +83,15 @@ def analyze_quishing_full(image_bytes: bytes, ml_model, normalize_fn) -> Dict[st
     Decodes QR code, extracts target URL, and pipes it through
     the 17-feature Random Forest ML engine + live SSL/DNS security inspection.
     """
+
+    # Decode the uploaded QR image and validate the extraction result
+    # before performing any threat analysis.
     decode_res = decode_qr_from_bytes(image_bytes)
 
     if not decode_res.get("success"):
         return decode_res
 
+# Return an error if the image contains no successfully decoded QR code.
     if not decode_res.get("has_qr"):
         return {
             "success": False,
@@ -101,6 +113,7 @@ def analyze_quishing_full(image_bytes: bytes, ml_model, normalize_fn) -> Dict[st
         }
 
     # Normalize target URL
+    # Standardize the extracted URL before computing features for the classifier.
     normalized_url = normalize_fn(payload)
     features = extract_features(normalized_url)
     feature_vector = [features[col] for col in FEATURE_COLUMNS]

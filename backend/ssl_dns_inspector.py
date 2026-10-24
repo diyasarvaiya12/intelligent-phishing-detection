@@ -14,6 +14,8 @@ from typing import Dict, Any, List
 
 def parse_target_host(url_or_domain: str):
     """Normalize input and extract hostname and port."""
+    # Normalize the input and extract the hostname, port, and URL scheme
+    # for subsequent DNS and TLS inspection.
     url = url_or_domain.strip()
     if not (url.startswith("http://") or url.startswith("https://")):
         url = f"https://{url}"
@@ -35,6 +37,7 @@ def parse_target_host(url_or_domain: str):
     return host.strip(), port, scheme
 
 
+# Resolve the hostname to its available IPv4 and IPv6 addresses.
 def inspect_dns(hostname: str) -> Dict[str, Any]:
     """Perform real-time DNS resolution and examine IP characteristics."""
     dns_info = {

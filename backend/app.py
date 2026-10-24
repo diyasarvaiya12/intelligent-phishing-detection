@@ -1,4 +1,4 @@
-import os
+﻿import os
 import sys
 import json
 import pickle
@@ -26,6 +26,8 @@ except ImportError:
 FRONTEND_DIR = os.path.join(CURRENT_DIR, "..", "frontend")
 MODEL_PATH = os.path.join(CURRENT_DIR, "model.pkl")
 METRICS_PATH = os.path.join(CURRENT_DIR, "model_metrics.json")
+
+# Configure Flask to serve the frontend dashboard alongside backend API routes.
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 
@@ -120,10 +122,13 @@ def predict():
     Validates URL, extracts lexical features, runs model prediction,
     calculates risk score and returns detailed analysis.
     """
+    # Load the saved classifier, or retrain it if the model is missing or incompatible.
+    # Evaluation metrics are loaded separately for display on the dashboard.
     global model
     if model is None:
         load_or_train_model()
 
+    # Recover from a missing or unusable model by running the training pipeline.
     if model is None:
         return jsonify({
             "success": False,

@@ -3,6 +3,8 @@ import pandas as pd
 # Load dataset
 df = pd.read_csv("../data/phishing_dataset.csv")
 
+#print the dataset
+
 print("\n--- DATASET SHAPE ---")
 print(df.shape)
 

@@ -106,6 +106,8 @@ def extract_features(url: str) -> dict:
 
     return features
 
+# Test feature extraction on sample legitimate and suspicious URLs
+# to verify that the URL analysis pipeline produces the expected features.
 
 if __name__ == "__main__":
     test_urls = [
